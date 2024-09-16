@@ -50,7 +50,7 @@ const LoginPage = () => {
         <Typography component="h1" variant="h4">
           Login
         </Typography>
-        <LoginForm credentials={credentials} handleChange={handleChange} handleSubmit={handleSubmit(credentials, navigate)} error={error} />
+        <LoginForm credentials={credentials} handleChange={handleChange} handleSubmit={(e)=>{e.preventDefault(); handleSubmit(credentials, navigate)}} error={error} />
         <img src={googleLogo} alt="Google Logo" onClick={handleGoogleOauth} style={{ cursor: 'pointer' }}/>
       </Box>
     </Container>

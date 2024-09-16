@@ -2,17 +2,22 @@ import axios from 'axios';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
-const handleSignUpSubmit = async (user, setError) => {
+const handleSignUpSubmit = async (user, setError, navigate) => {
     try {
-        const response = await axios.post('/api/users/signup', user, {
+        const res = await axios.post('/auth/users/signup', user, {
             headers: {
                 'Content-Type': 'application/json',
             },
         });
-        console.log('User registered:', response.data);
-        // Redirect or show success message
+        if(res.status === 200){
+            navigate('/login');
+        }
     } catch (error) {
-        setError('An error occurred');
+        if (error.response && error.response.status === 400) {
+            setError("Email Already Exists, Pls Login");
+        } else {
+            setError('An error occurred');
+        }
     }
 };
 
