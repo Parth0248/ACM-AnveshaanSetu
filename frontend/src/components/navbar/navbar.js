@@ -12,14 +12,15 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import ACMLogo from "../../logos/ACM.png";
-import { Link } from "react-router-dom";
-const pages = ["Blog"];
+import { Link, useNavigate } from "react-router-dom";
+const pages = ["Applications"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar({ isLoggedIn }) {
-  isLoggedIn = false;
+  isLoggedIn = true; // TODO: Remove this and replace it with Logic
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -32,13 +33,22 @@ function ResponsiveAppBar({ isLoggedIn }) {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
+    if (setting === "Profile") {
+      navigate("/profile");
+    } 
+    else if (setting === "Logout") {
+      localStorage.clear();
+      navigate("/");
+    }
   };
 
   const handleLogoClick = () => {
-    <Link to="/"></Link>;
+    navigate("/");
+    // window.location.href = "/";
   };
+
   return (
     <AppBar
       position="static"
@@ -74,7 +84,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
               padding: "10px",
             }}
           >
-            ACM
+            Anveshan Setu
           </Typography>
           
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -159,7 +169,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

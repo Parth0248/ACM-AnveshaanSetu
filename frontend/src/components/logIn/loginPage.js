@@ -51,7 +51,7 @@ const LoginPage = () => {
           Login
         </Typography>
         <LoginForm credentials={credentials} handleChange={handleChange} handleSubmit={(e)=>{e.preventDefault(); handleSubmit(credentials, navigate)}} error={error} />
-        <img src={googleLogo} alt="Google Logo" onClick={handleGoogleOauth} style={{ cursor: 'pointer' }}/>
+        <img src={googleLogo} alt="Google Logo" onClick={handleGoogleOauth(navigate)} style={{ cursor: 'pointer' }}/>
       </Box>
     </Container>
   );

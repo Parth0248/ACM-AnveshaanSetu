@@ -21,11 +21,13 @@ const SignUpPage = () => {
     setError('');
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
+    console.log(user.password, user.confirmPassword);
     if (name === "password") {
       validatePasswordStrength(value, setPasswordStrength);
       if (passwordStrength !== "Strong") {
         setError('Please enter a strong password');
-      } else {
+      } 
+      else {
         setError('');
       }
     }
@@ -41,14 +43,14 @@ const SignUpPage = () => {
   };
 
   return (
-    <Container component="main" maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'top', minHeight: '100vh' }}>
+    <Container component="main" maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'top', minHeight: '100vh', paddingBottom: 2 }}>
       <Box 
         sx={{ 
           display: 'flex', // Flexbox for alignment
           justifyContent: 'center', // Center horizontally
           alignItems: 'center', // Center vertically
-          marginBottom: 2, // Space below the title
-          marginTop: 8, // Space above the title
+          marginBottom: 0, // Space below the title
+          marginTop: 6, // Space above the title
         }}
       >
         <Typography variant="h3" align="center">ACM India Anveshan Setu Fellowship</Typography>
@@ -63,7 +65,7 @@ const SignUpPage = () => {
           borderRadius: '8px',
           padding: '16px',
           width: '50%',
-          marginTop: 8,
+          marginTop: 3.5,
           boxShadow: 4, // Add shadow
         }}
       >

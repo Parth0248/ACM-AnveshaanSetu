@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // API 
 
-const handleGoogleOauth = async () => {
+const handleGoogleOauth = async (navigate) => {
   try {
     const res = await axios.get('/auth/google');
     window.location.href = res.data;
