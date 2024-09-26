@@ -3,17 +3,22 @@ import { Container, Typography, Box } from '@mui/material';
 import SignUpForm from './signUpForm';
 import validatePasswordStrength from './validatePassword';
 import handleSignUpSubmit from './handleSignUpSubmit';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
   const [passwordStrength, setPasswordStrength] = useState("");
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     email: '',
     password: '',
     confirmPassword: '',
+    lastName: '',
+    firstName: ''
   });
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
+    setError('');
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
     if (name === "password") {
@@ -32,7 +37,7 @@ const SignUpPage = () => {
       setError('Passwords do not match');
       return;
     }
-    await handleSignUpSubmit(user, setError); // Use the new function
+    await handleSignUpSubmit(user, setError, navigate); // Use the new function
   };
 
   return (
