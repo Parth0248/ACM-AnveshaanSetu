@@ -1,182 +1,362 @@
-import React, { useState } from 'react';
-import { Box, Container, Typography, TextField, Button, Tooltip, IconButton, Select, MenuItem, InputLabel, FormControl, FormHelperText, FormGroup, Checkbox, FormControlLabel, Input } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import axios from 'axios';
-import ResponsiveAppBar from '../navbar/navbar';
+import React, { useState } from "react";
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Tooltip,
+  IconButton,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  FormGroup,
+  Checkbox,
+  FormControlLabel,
+  Input,
+} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import axios from "axios";
+import ResponsiveAppBar from "../navbar/navbar";
 
 const ApplicationPage = () => {
-    const [formData, setFormData] = useState({
-        justification: '',
-        coursework: '',
-        researchExperience: '',
-        onlineCourses: '',
-        firstPreference: '',
-        secondPreference: '',
-        references: '',
-        goals: '',
-        cv: null,
-        statementOfPurpose: null,
-        consentLetter: null,
-        researchProblem: '',
-        specificActivities: '',
-        advisorName: '',
-        advisorEmail: '',
-        coAdvisorName: '',
-        coAdvisorEmail: '',
-        agree: false
+  const [formData, setFormData] = useState({
+    justification: "",
+    researchProblem: "",
+    coursework: "",
+    researchExperience: "",
+    onlineCourses: "",
+    firstPreference: "",
+    secondPreference: "",
+    references: "",
+    goals: "",
+    cv: null,
+    statementOfPurpose: null,
+    consentLetter: null,
+    specificActivities: "",
+    advisorName: "",
+    advisorEmail: "",
+    coAdvisorName: "",
+    coAdvisorEmail: "",
+    agree: false,
+  });
+
+  const facultyOptions = [
+    {
+      label:
+        "Prof. Abhijan Chakraborty, IIT Delhi - Responsible AI, Social Computing, AI and Law",
+      value: "AbhijanChakraborty",
+    },
+    // Add all other faculty options here
+  ];
+
+  const handleChange = (event) => {
+    const { name, value, files } = event.target;
+    if (files) {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formDataToSubmit = new FormData();
+    Object.keys(formData).forEach((key) => {
+      formDataToSubmit.append(key, formData[key]);
     });
-
-    const facultyOptions = [
-        { label: "Prof. Abhijan Chakraborty, IIT Delhi - Responsible AI, Social Computing, AI and Law", value: "AbhijanChakraborty" },
-        // Add all other faculty options here
-    ];
-
-    const handleChange = (event) => {
-        const { name, value, files } = event.target;
-        if (files) {
-            setFormData(prev => ({ ...prev, [name]: files[0] }));
-        } else {
-            setFormData(prev => ({ ...prev, [name]: value }));
+    try {
+      const response = await axios.post(
+        "/api/submit-application",
+        formDataToSubmit,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
         }
-    };
+      );
+      console.log("Application Submitted", response.data);
+    } catch (error) {
+      console.error("Submission error", error);
+    }
+  };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const formDataToSubmit = new FormData();
-        Object.keys(formData).forEach(key => {
-            formDataToSubmit.append(key, formData[key]);
-        });
-        try {
-            const response = await axios.post('/api/submit-application', formDataToSubmit, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            console.log('Application Submitted', response.data);
-        } catch (error) {
-            console.error('Submission error', error);
-        }
-    };
+  return (
+    <Container>
+      <ResponsiveAppBar />
+      <Box sx={{ mt: 4, paddingBottom: 2 }}>
+        <Typography variant="h4" gutterBottom>
+          Application Form
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
 
-    return (
-        <Container>
-            <ResponsiveAppBar />
-            <Box sx={{ mt: 4, paddingBottom: 2 }}>
-            <Typography variant="h4" gutterBottom>Application Form</Typography>
-            <form onSubmit={handleSubmit}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                        label="Justify your area of work / interest *"
-                        name="justification"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={formData.justification}
-                        onChange={handleChange}
-                        required
-                    />
-                    <TextField
-                        label="Relevant coursework with grades/marks *"
-                        name="coursework"
-                        fullWidth
-                        value={formData.coursework}
-                        onChange={handleChange}
-                        required
-                    />
-                    <TextField
-                        label="Any previous research experience"
-                        name="researchExperience"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={formData.researchExperience}
-                        onChange={handleChange}
-                    />
-                    <TextField
-                        label="Any online courses / self-study material that is relevant"
-                        name="onlineCourses"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={formData.onlineCourses}
-                        onChange={handleChange}
-                    />
-                    <FormControl fullWidth required>
-                        <InputLabel>Faculty whom you would like to visit (1st preference) *</InputLabel>
-                        <Select
-                            name="firstPreference"
-                            value={formData.firstPreference}
-                            onChange={handleChange}
-                        >
-                            {facultyOptions.map(option => (
-                                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl fullWidth required>
-                        <InputLabel>Faculty whom you would like to visit (2nd preference) *</InputLabel>
-                        <Select
-                            name="secondPreference"
-                            value={formData.secondPreference}
-                            onChange={handleChange}
-                        >
-                            {facultyOptions.map(option => (
-                                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <TextField
-                        label="References from faculty / industry contacts *"
-                        name="references"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={formData.references}
-                        onChange={handleChange}
-                        required
-                    />
-                    <TextField
-                        label="What do you hope to achieve by the end of the visit? *"
-                        name="goals"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={formData.goals}
-                        onChange={handleChange}
-                        required
-                    />
-                    <InputLabel htmlFor="cv-upload">Upload your CV *</InputLabel>
-                    <Input
-                        id="cv-upload"
-                        name="cv"
-                        type="file"
-                        onChange={handleChange}
-                        required
-                    />
-                    <InputLabel htmlFor="sop-upload">Upload your Statement of Purpose *</InputLabel>
-                    <Input
-                        id="sop-upload"
-                        name="statementOfPurpose"
-                        type="file"
-                        onChange={handleChange}
-                        required
-                    />
-                    <InputLabel htmlFor="consent-upload">Upload your No-Objection / Consent letter *</InputLabel>
-                    <Input
-                        id="consent-upload"
-                        name="consentLetter"
-                        type="file"
-                        onChange={handleChange}
-                        required
-                    />
-                    <FormControlLabel
-                        control={<Checkbox checked={formData.agree} onChange={(e) => setFormData(prev => ({ ...prev, agree: e.target.checked }))} />}
-                        label="All information I have provided are correct."
-                    />
-                    <Button type="submit" variant="contained">Submit Application</Button>
-                </Box>
-            </form>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                Research Problem that you are working on or interested in
+                working?
+              </Typography>
+              <Box>
+                <Tooltip
+                  title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>This can be indicative only. Be as specific as possible and provide all relevant information, such as, links to papers you have read, written, or courses you have taken online, etc. <br/> * * Please share this only after getting a consent from your advisor.</h3>}
+                sx={{ pl: 1 }}
+              >
+                <InfoIcon />
+                </Tooltip>
+              </Box>
             </Box>
-        </Container>
-    );
+
+            <TextField
+              name="researchProblem"
+              fullWidth
+              multiline
+              rows={3}
+              value={formData.researchProblem}
+              onChange={handleChange}
+              required
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                Any previous research experience (e.g. internships, publications, etc.)
+              </Typography>
+              <Box>
+                <Tooltip
+                  title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>Optional, but if you have any, please share.</h3>}
+                sx={{ pl: 1 }}
+              >
+                <InfoIcon />
+                </Tooltip>
+              </Box>
+            </Box>
+            <TextField
+              name="researchExperience"
+              fullWidth
+              multiline
+              rows={3}
+              value={formData.researchExperience}
+              onChange={handleChange}
+            />
+
+            <Typography variant="h7" gutterBottom>
+              Relevant coursework with grades/marks (e.g. Security, 74% , NLP, 89%)
+            </Typography>
+
+            <TextField
+              name="coursework"
+              fullWidth
+              value={formData.coursework}
+              onChange={handleChange}
+              required
+            />
+
+            <Typography variant="h7" gutterBottom>
+              Any online courses / self-study material that is relevant
+            </Typography>
+
+            <TextField
+              name="onlineCourses"
+              fullWidth
+              multiline
+              rows={2}
+              value={formData.onlineCourses}
+              onChange={handleChange}
+            />
+
+            <Typography variant="h7" gutterBottom>
+              Faculty whom you would like to visit (1st preference) *
+            </Typography>
+            <FormControl fullWidth required>
+              <Select
+                name="firstPreference"
+                value={formData.firstPreference}
+                onChange={handleChange}
+              >
+                {facultyOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Typography variant="h7" gutterBottom>
+              Faculty whom you would like to visit (2nd preference) *
+            </Typography>
+            <FormControl fullWidth required>
+              <Select
+                name="secondPreference"
+                value={formData.secondPreference}
+                onChange={handleChange}
+              >
+                {facultyOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                Justify your area of work / interest with the faculty you have chosen.
+              </Typography>
+              <Box>
+                <Tooltip
+                  title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>Unless the justification is strong and elaborate, the application may be rejected.</h3>}
+                sx={{ pl: 1 }}
+              >
+                <InfoIcon />
+                </Tooltip>
+              </Box>
+            </Box>
+
+            <TextField
+              name="justification"
+              fullWidth
+              multiline
+              rows={3}
+              value={formData.justification}
+              onChange={handleChange}
+              required
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+               Give 2 references of faculty / industry contacts who can vouch for your application.
+              </Typography>
+              <Box>
+                <Tooltip
+                  title={<h3 style={{color: "white", fontSize: "0.8rem", padding: "10px"}}> They could be from your UG / PG institute, somebody with whom you did an internship, etc. Please specify as below:<br /> (1) Reference 1: Name, Affiliation, and Email<br /> (2) Reference 2: Name, Affiliation, and Email</h3>}
+                  sx={{ pl: 1 }}
+                >
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
+            </Box>
+
+            <TextField
+              name="references"
+              fullWidth
+              multiline
+              rows={2}
+              value={formData.references}
+              onChange={handleChange}
+              required
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                What do you hope to achieve by the end of the visit?
+              </Typography>
+              <Box>
+                <Tooltip
+                  title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>What are the skills, experience you would gain at the end of the visit. Please make a strong case for your application.</h3>}
+                  sx={{ pl: 1 }}
+                >
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
+            </Box>
+
+            <TextField
+              name="goals"
+              fullWidth
+              multiline
+              rows={2}
+              value={formData.goals}
+              onChange={handleChange}
+              required
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="h7" gutterBottom>
+                    Upload your CV *
+                </Typography>
+                <Box>
+                    <Tooltip
+                        title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>Without this, your application will not be reviewed.</h3>}
+                        sx={{ pl: 1 }}
+                    >
+                        <InfoIcon />
+                    </Tooltip>
+                </Box>
+            </Box>
+            <Input
+              id="cv-upload"
+              name="cv"
+              type="file"
+              onChange={handleChange}
+              required
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="h7" gutterBottom>
+                    Upload your Statement of Purpose *
+                </Typography>
+                <Box>
+                    <Tooltip
+                        title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>Describe why you are the best candidate to receive this fellowship to visit the faculty. Mention your concrete research plans(if you have one). Without this, your application will not be reviewed.</h3>}
+                        sx={{ pl: 1 }}
+                    >
+                        <InfoIcon />
+                    </Tooltip>
+                </Box>
+            </Box>
+
+            <Input
+              id="sop-upload"
+              name="statementOfPurpose"
+              type="file"
+              onChange={handleChange}
+              required
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="h7" gutterBottom>
+                    Upload your No-Objection / Consent letter from your advisor*
+                </Typography>
+                <Box>
+                    <Tooltip
+                        title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>Without this, your application will not be reviewed.</h3>}
+                        sx={{ pl: 1 }}
+                    >
+                        <InfoIcon />
+                    </Tooltip>
+                </Box>
+            <Typography variant="h7" gutterBottom>
+                <a href="https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf" target="_blank" rel="noopener noreferrer" style={{ paddingLeft: "10px", textDecoration: 'none', color: 'blue' }}> Sample</a>
+            </Typography>
+            </Box>
+            <Input
+              id="consent-upload"
+              name="consentLetter"
+              type="file"
+              onChange={handleChange}
+              required
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.agree}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      agree: e.target.checked,
+                    }))
+                  }
+                />
+              }
+              label="All information I have provided are correct."
+            />
+            <Button type="submit" variant="contained">
+              Submit Application
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Container>
+  );
 };
 
 export default ApplicationPage;
