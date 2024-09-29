@@ -57,7 +57,7 @@ router.use("/login", async (req, res) => {
         }
         return res.status(401).send("Pls Sign Up")
     } catch(e){
-        console.error('Error during login:', error);
+        console.error('Error during login:', e);
         res.status(500).send('Server error');
     } finally {
         if (connection) {
