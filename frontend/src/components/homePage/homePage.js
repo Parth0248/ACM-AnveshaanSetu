@@ -298,6 +298,12 @@ const FooterSection = () => (
 
 const HomePage = () => {
     const navigate = useNavigate();
+
+    React.useEffect(()=>{
+        if(!localStorage.getItem('User')){
+            navigate('/login')
+        }
+    })
     const handleApplyClick = () => {
         navigate('/apply');
     };

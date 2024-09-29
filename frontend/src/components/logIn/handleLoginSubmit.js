@@ -14,7 +14,7 @@ const handleSubmit = async (credentials, navigate) => {
         if(res.status === 200 || credentials.email === 'admin@acm.org'){
             const type = res.data.type
             
-            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('User', res.data.token);
             localStorage.setItem('type', res.data.type);
             
             
