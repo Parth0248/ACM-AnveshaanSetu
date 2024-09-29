@@ -1,83 +1,14 @@
-// import React, { useEffect, useState } from 'react';
-// import { Container, Typography, Button, Box } from '@mui/material';
-// // import { useThemeContext } from '../ThemeContext';
-// // import { useNavigate } from 'react-router-dom';
-// // import Brightness4Icon from '@mui/icons-material/Brightness4';
-// // import ACMLogo from '../logos/ACM.png';
-
-// import ResponsiveAppBar from '../navbar/navbar.js';
-
-// const HomePage = () => {
-//   // const { toggleTheme } = useThemeContext();
-//   // const navigate = useNavigate();
-//   const [isSignedUp, setIsSignedUp] = useState(true); // Replace this with jwt token check
-//   const [welcomeMessage, setWelcomeMessage] = useState('');
-//   const [firstAccess, setFirstAccess] = useState(false);
-
-//   useEffect(() => {
-    
-//     if (!firstAccess && localStorage.getItem('firstAccess')) {
-//       // Clear localStorage
-//       localStorage.clear();
-//       // Set the 'firstAccess' flag to prevent clearing localStorage on subsequent accesses
-//       localStorage.setItem('firstAccess', true);
-//       setFirstAccess(true);
-//     }
-
-//     const userProfile = JSON.parse(localStorage.getItem('userProfile'));
-//     if (userProfile) {
-//       setIsSignedUp(true);
-//       const hours = new Date().getHours();
-//       const timeOfDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening';
-//       setWelcomeMessage(`Good ${timeOfDay}, ${userProfile.name}, are you ready for a brainstorming session with a mentor?`);
-//     }
-//   }, [firstAccess]);
-
-//   return (
-//     <Container>
-//       <ResponsiveAppBar />
-    
-//       {/* <Box sx={{ textAlign: 'center', my: 4 }}>
-//         {isSignedUp ? (
-//           <>
-//             <Typography variant="h4" component="h1" gutterBottom>
-//               {welcomeMessage}
-//             </Typography>
-//             <Button variant="contained" color="primary" href="/mentorship" sx={{ mt: 2 }}>
-//               Apply for Mentorship
-//             </Button>
-//           </>
-//         ) : (
-//           <>
-//             <Typography variant="h2" component="h1" gutterBottom>
-//               Welcome to PhD Clinic
-//             </Typography>
-//             <Typography variant="h5" component="p" gutterBottom>
-//               The PhD Clinic is here to help you navigate your research journey. Get mentorship and guidance from experienced researchers.
-//             </Typography>
-//             <Button variant="contained" color="primary" href="/profile" sx={{ mt: 2 }}>
-//               Sign Up
-//             </Button>
-//             <Button variant="contained" color="secondary" href="/login" sx={{ mt: 2, ml: 2 }}>
-//               Login
-//             </Button>
-//           </>
-//         )}
-//       </Box> */}
-//     </Container>
-//   );
-// };
-
 // export default HomePage;
 import React from 'react';
 import { Box, Typography, Container, Button, Card, CardContent, Grid, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText, Divider } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ResponsiveAppBar from '../navbar/navbar'; // Assuming this is your Navbar component
-import { useNavigate } from 'react-router-dom';
+import {  Link } from 'react-router-dom';
+
 
 
 // Hero Section Component
-const HeroSection = ({handleApplyClick}) => (
+const HeroSection = () => (
     <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 4, borderRadius: 3, mt: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
         <Typography variant="h3" component="h1" gutterBottom>
             ACM India Anveshan Setu Fellowship
@@ -85,7 +16,7 @@ const HeroSection = ({handleApplyClick}) => (
         <Typography variant="h6" sx={{ mb: 2 }}>
             Bridging the gap between aspiring researchers and established mentors.
         </Typography>
-        <Button variant="contained" href="#apply" size="large" onClick={ handleApplyClick() } sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
+        <Button component={Link} to="/apply" variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
             Apply Now
         </Button>
     </Box>
@@ -297,17 +228,16 @@ const FooterSection = () => (
 );
 
 const HomePage = () => {
-    const navigate = useNavigate();
-    const handleApplyClick = () => {
-        navigate('/apply');
-    };
+    // const navigate = useNavigate();
+    
     return (
         <Container>
             {/* NavBar */}
             <ResponsiveAppBar />
 
             {/* Hero Section */}
-            <HeroSection handleApplyClick={handleApplyClick} />
+            {/* <HeroSection handleApplyClick={handleApplyClick()} /> */}
+            <HeroSection />
 
             {/* Content Sections */}
             <AboutSection />

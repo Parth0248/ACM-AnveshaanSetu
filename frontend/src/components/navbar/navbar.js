@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import ACMLogo from "../../logos/ACM.png";
 import { Link, useNavigate } from "react-router-dom";
+
 const pages = ["Applications"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -20,7 +21,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
   isLoggedIn = true; // TODO: Remove this and replace it with Logic
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -36,17 +37,17 @@ function ResponsiveAppBar({ isLoggedIn }) {
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
     if (setting === "Profile") {
-      navigate("/profile");
+      window.location.href = "/profile";
     } 
     else if (setting === "Logout") {
       localStorage.clear();
-      navigate("/");
+      window.location.href = "/";
     }
   };
 
   const handleLogoClick = () => {
-    navigate("/");
-    // window.location.href = "/";
+    window.location.href = "/";
+
   };
 
   return (
@@ -72,7 +73,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
             noWrap
             component="a"
             href="#"
-            onClick={handleLogoClick}
+            onClick={() => {handleLogoClick(); handleCloseNavMenu();}}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
