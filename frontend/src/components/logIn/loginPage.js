@@ -18,6 +18,9 @@ const LoginPage = () => {
     const { name, value } = e.target;
     setCredentials(prev => ({ ...prev, [name]: value }));
   };
+  const google = async () => {
+    window.open("http://localhost:8000/auth/google", "_self");
+  }
 
 
   return (
@@ -51,7 +54,7 @@ const LoginPage = () => {
           Login
         </Typography>
         <LoginForm credentials={credentials} handleChange={handleChange} handleSubmit={(e)=>{e.preventDefault(); handleSubmit(credentials, navigate)}} error={error} />
-        <img src={googleLogo} alt="Google Logo" onClick={handleGoogleOauth(navigate)} style={{ cursor: 'pointer' }}/>
+        <img src={googleLogo} alt="Google Logo" onClick={google} style={{ cursor: 'pointer' }}/>
       </Box>
     </Container>
   );

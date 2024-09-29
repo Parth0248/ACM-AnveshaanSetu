@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router';
 import {
   Box,
   Container,
@@ -6,13 +7,9 @@ import {
   TextField,
   Button,
   Tooltip,
-  IconButton,
   Select,
   MenuItem,
-  InputLabel,
   FormControl,
-  FormHelperText,
-  FormGroup,
   Checkbox,
   FormControlLabel,
   Input,
@@ -43,14 +40,7 @@ const ApplicationPage = () => {
     agree: false,
   });
 
-  const facultyOptions = [
-    {
-      label:
-        "Prof. Abhijan Chakraborty, IIT Delhi - Responsible AI, Social Computing, AI and Law",
-      value: "AbhijanChakraborty",
-    },
-    // Add all other faculty options here
-  ];
+  const [facultyOptions, setFacultyOptions] = useState([]);
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
@@ -61,25 +51,43 @@ const ApplicationPage = () => {
     }
   };
 
+  const fetchFacultyOptions = async () => {
+    try {
+      const response = await axios.get("/mentee/get-mentors")
+      setFacultyOptions(response.data)
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const token = localStorage.getItem('User');
     const formDataToSubmit = new FormData();
     Object.keys(formData).forEach((key) => {
       formDataToSubmit.append(key, formData[key]);
     });
     try {
       const response = await axios.post(
-        "/api/submit-application",
+        "/mentee/submit-application",
         formDataToSubmit,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {"Authorization": `Bearer ${token}`},
         }
       );
-      console.log("Application Submitted", response.data);
     } catch (error) {
       console.error("Submission error", error);
     }
   };
+
+  const navigate = useNavigate();
+
+  React.useEffect(()=>{
+      if(!localStorage.getItem('User')){
+          navigate('/login')
+      }
+      fetchFacultyOptions()
+  },[])
 
   return (
     <Container>
