@@ -232,9 +232,9 @@ const HomePage = () => {
     const navigate = useNavigate();
 
     React.useEffect(()=>{
-        // if(!localStorage.getItem('User')){
-        //     navigate('/login')
-        // }
+        if(!localStorage.getItem('User')){
+            navigate('/login')
+        }
     })
     return (
         <Container>

@@ -21,9 +21,9 @@ const ProfilePage = () => {
     const navigate = useNavigate();
     useEffect(() => {
         
-        // if(!localStorage.getItem('User')){
-        //     navigate('/login')
-        // }
+        if(!localStorage.getItem('User')){
+            navigate('/login')
+        }
         // Placeholder for loading existing user data if available
         const loadData = async () => {
             const token = localStorage.getItem('User'); // assuming token is stored this way
@@ -67,8 +67,9 @@ const ProfilePage = () => {
         event.preventDefault();
         const token = localStorage.getItem('token');
         try {
-            await axios.post('/api/profile', profile, { headers: { Authorization: `Bearer ${token}` } });
+            await axios.post('/mentee/profile', profile, { headers: { Authorization: `Bearer ${token}` } });
             alert('Profile updated successfully!');
+            navigate('/profile')
         } catch (error) {
             console.error('Error updating profile:', error);
         }

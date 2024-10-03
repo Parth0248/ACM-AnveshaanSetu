@@ -1,27 +1,53 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Container, Typography, Box, Button, Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ResponsiveAppBar from '../navbar/navbar';
-
+import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 const StaticProfilePage = () => {
 
     // Dummy profile data
-    const profile = {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        affiliation: 'University of Example',
-        mobileNumber: '123-456-7890',
-        gender: 'Male',
-        phdRegistration: 'Full-Time',
-        yearOfPhd: '2nd year',
-        acmMailingList: true
-    };
+    const [profile, setProfile] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        affiliation: '',
+        mobileNumber: '',
+        gender: '',
+        phdRegistration: '',
+        yearOfPhd: ''
+    });
 
     const handleEditClick = () => {
         window.location.href = '/editProfile';
     };
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(!localStorage.getItem('User')){
+            navigate('/login')
+        }
+        const loadData = async ()=>{
+            const token = localStorage.getItem('User'); // assuming token is stored this way
+            try {
+                const response = await axios.get('/mentee/profile', { headers: { Authorization: `Bearer ${token}` } });
+                var user = response.data;
+                setProfile({
+                    'firstName' : user['FirstName'],
+                    'lastName' : user['LastName'],
+                    'email' : user['Email'],
+                    'affiliation' : user['Affiliation'],
+                    'mobileNumber' : user['MobileNumber'],
+                    'gender' : user['Gender'],
+                    'phdRegistration' : user['PHDRegistration'],
+                    'yearOfPhd' : user['PHDYear'],
+                });
+            } catch (error) {
+                console.error('Error fetching profile data:', error);
+            }
+        }
+        loadData()
+    },[])
 
     return (
         <Container>

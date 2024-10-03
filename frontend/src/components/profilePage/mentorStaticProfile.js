@@ -1,24 +1,49 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Container, Typography, Box, Button, Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ResponsiveAppBar from '../navbar/navbar';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 const MentorStaticProfilePage = () => {
-
 
     const handleEditClick = () => {
         window.location.href = '/editMentorProfile';
     };
 
     // Dummy profile data for the mentor
-    const profile = {
-        firstName: 'Prayush',
-        lastName: 'Rathore',
-        affiliation: 'Massachusetts Institute of Technology',
-        areasOfExpertise: 'Artificial Intelligence, Machine Learning, Blockchain',
-        mobileNumber: '123-456-7890',
-        email: 'prayush.r@research.iiit.ac.in'
-    };
+    const [profile, setProfile] = useState({
+        firstName: '',
+        lastName: '',
+        affiliation: '',
+        areasOfExpertise: '',
+        mobileNumber: '',
+        email: ''
+    });
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(!localStorage.getItem('User')){
+            navigate('/login')
+        }
+        const loadData = async ()=>{
+            const token = localStorage.getItem('User'); // assuming token is stored this way
+            try {
+                const response = await axios.get('/mentor/profile', { headers: { Authorization: `Bearer ${token}` } });
+                var user = response.data;
+                setProfile({
+                    'firstName' : user['FirstName'],
+                    'lastName' : user['LastName'],
+                    'email' : user['Email'],
+                    'affiliation' : user['Affiliation'],
+                    'mobileNumber' : user['MobileNumber'],
+                    'areasOfExpertise' : user['ResearchAreas']
+                });
+            } catch (error) {
+                console.error('Error fetching profile data:', error);
+            }
+        }
+        loadData()
+    },[])
 
     return (
         <Container>

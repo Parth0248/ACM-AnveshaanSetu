@@ -31,7 +31,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
   };
 
   const handleCloseNavMenu = () => {
-    if (localStorage.getItem("User") == "mentor") {
+    if (localStorage.getItem("type") == "mentor") {
       window.location.href = "/mentorDashboard";
     }
     else {
@@ -44,7 +44,12 @@ function ResponsiveAppBar({ isLoggedIn }) {
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
     if (setting === "Profile") {
-      window.location.href = "/profile";
+      if(localStorage.getItem("type")== "mentor"){
+        window.location.href = "/mentorProfile";
+      }
+      else if(localStorage.getItem("type")== "mentee"){
+        window.location.href = "/profile";
+      }
     } 
     else if (setting === "Logout") {
       localStorage.clear();
@@ -53,8 +58,12 @@ function ResponsiveAppBar({ isLoggedIn }) {
   };
 
   const handleLogoClick = () => {
-    window.location.href = "/";
-
+    if (localStorage.getItem("type") == "mentor") {
+      window.location.href = "/mentorDashboard";
+    }
+    else if(localStorage.getItem("type") == "mentee"){
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -79,8 +88,6 @@ function ResponsiveAppBar({ isLoggedIn }) {
             variant="h6"
             noWrap
             component="a"
-            href="#"
-            onClick={() => {handleLogoClick(); handleCloseNavMenu();}}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },

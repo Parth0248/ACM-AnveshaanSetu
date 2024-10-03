@@ -19,15 +19,15 @@ const handleSubmit = async (credentials, navigate) => {
             
             
             if(type === 'admin'){
-                console.log(type);
+                navigate('/');
             }
             else if(type === 'mentee'){
-                console.log(type);
+                navigate('/');
             }
             else if(type === 'mentor'){
-                console.log(type)
+                navigate('/mentorDashboard');
             }
-            navigate('/');
+            
         }        
     } catch (error) {
         if (error.response && error.response.status === 400) {
