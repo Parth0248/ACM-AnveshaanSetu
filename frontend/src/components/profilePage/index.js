@@ -1,3 +1,3 @@
-import ProfilePage from "./profilePage";
+import StaticProfilePage from "./staticProfilePage";
 
-export default ProfilePage;
+export default StaticProfilePage;

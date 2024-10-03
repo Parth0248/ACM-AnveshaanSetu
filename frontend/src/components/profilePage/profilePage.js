@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Box, TextField, MenuItem, FormControl, InputLabel, Select, Checkbox, FormGroup, FormControlLabel } from '@mui/material';
 import ResponsiveAppBar from '../navbar/navbar';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const ProfilePage = () => {
     const [profile, setProfile] = useState({
@@ -17,24 +18,34 @@ const ProfilePage = () => {
     });
     const [genderOther, setGenderOther] = useState('');
     const [phdOther, setPhdOther] = useState('');
-
+    const navigate = useNavigate();
     useEffect(() => {
+        
+        // if(!localStorage.getItem('User')){
+        //     navigate('/login')
+        // }
         // Placeholder for loading existing user data if available
         const loadData = async () => {
-            const token = localStorage.getItem('token'); // assuming token is stored this way
+            const token = localStorage.getItem('User'); // assuming token is stored this way
             try {
-                const response = await axios.get('/api/profile', { headers: { Authorization: `Bearer ${token}` } });
-                setProfile(response.data);
+                const response = await axios.get('/mentee/profile', { headers: { Authorization: `Bearer ${token}` } });
+                var user = response.data;
+                setProfile({
+                    'firstName' : user['FirstName'],
+                    'lastName' : user['LastName'],
+                    'email' : user['Email'],
+                    'affiliation' : user['Affiliation'],
+                    'mobileNumber' : user['MobileNumber'],
+                    'gender' : user['Gender'],
+                    'phdRegistration' : user['PHDRegistration'],
+                    'yearOfPhd' : user['PHDYear'],
+                    'acmMailingList' : user['AddToMailingList']
+                });
             } catch (error) {
                 console.error('Error fetching profile data:', error);
             }
         };
         loadData();
-        setProfile({
-            firstName: 'Admin',
-            lastName: 'Admin',
-            email: 'admin@acm.org'
-        });
     }, []);
 
     const handleChange = (event) => {
@@ -66,7 +77,7 @@ const ProfilePage = () => {
     return (
         <Container>
             <ResponsiveAppBar />
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4, paddingBottom: 2 }}>
+            <Box component="form" sx={{ mt: 4, paddingBottom: 2 }}>
                 <Typography variant="h4">Profile</Typography>
                 <TextField
                     fullWidth
@@ -193,7 +204,7 @@ const ProfilePage = () => {
                 <FormGroup>
                     <FormControlLabel control={<Checkbox checked={profile.acmMailingList} onChange={handleCheckboxChange} />} label="Please Add me to ACM mailing list" />
                 </FormGroup>
-                <Button type="submit" variant="contained" sx={{ mt: 2 }}>Save Profile</Button>
+                <Button type="submit" onClick={handleSubmit} variant="contained" sx={{ mt: 2 }}>Save Profile</Button>
             </Box>
         </Container>
     );

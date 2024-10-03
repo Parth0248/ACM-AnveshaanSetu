@@ -4,6 +4,7 @@ import { Box, Typography, Container, Button, Card, CardContent, Grid, Accordion,
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ResponsiveAppBar from '../navbar/navbar'; // Assuming this is your Navbar component
 import {  Link } from 'react-router-dom';
+import { useNavigate } from 'react-router'
 
 
 
@@ -228,8 +229,13 @@ const FooterSection = () => (
 );
 
 const HomePage = () => {
-    // const navigate = useNavigate();
-    
+    const navigate = useNavigate();
+
+    React.useEffect(()=>{
+        // if(!localStorage.getItem('User')){
+        //     navigate('/login')
+        // }
+    })
     return (
         <Container>
             {/* NavBar */}

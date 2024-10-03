@@ -8,8 +8,10 @@ app.use(cors());
 app.use(bodyParser.json())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(express.static("../uploads"));
 app.use("/auth",require("./routes/login.js"));
+app.use("/mentee",require("./routes/mentee.js"));
+
 
 const PORT = 8000
 app.listen(PORT, () => console.log(`Server is running at port ${PORT}`))
