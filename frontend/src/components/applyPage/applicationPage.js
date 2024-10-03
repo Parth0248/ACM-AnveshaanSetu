@@ -278,6 +278,89 @@ const ApplicationPage = () => {
             />
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                What specific activites are you interested and looking forward to during the visit?
+              </Typography>
+              <Box>
+                <Tooltip
+                  title={<h3 style={{color: "white", fontSize: "0.9rem", padding: "10px"}}>e.g. would need help in formulating the research problem. Be as explicit as possible.</h3>}
+                  sx={{ pl: 1 }}
+                >
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
+            </Box>
+
+            <TextField
+              name="specificActivities"
+              fullWidth
+              multiline
+              rows={2}
+              value={formData.specificActivities}
+              onChange={handleChange}
+              required
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                Ph.D. thesis Advisor Name? *
+              </Typography>
+            </Box>
+
+            <TextField
+              name="advisorName"
+              fullWidth
+              multiline
+              rows={1}
+              value={formData.advisorName}
+              onChange={handleChange}
+              required
+            />
+        
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                Ph.D. thesis Advisor Email? *
+              </Typography>
+            </Box>
+
+            <TextField
+              name="advisorEmail"
+              fullWidth
+              multiline
+              rows={1}
+              value={formData.advisorEmail}
+              onChange={handleChange}
+              required
+            />
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                Ph.D. thesis Co-Advisor Name?
+              </Typography>
+            </Box>
+
+            <TextField
+              name="coAdvisorName"
+              fullWidth
+              multiline
+              rows={1}
+              value={formData.coAdvisorName}
+              onChange={handleChange}
+            />
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h7" gutterBottom>
+                Ph.D. thesis Co-Advisor Email?
+              </Typography>
+            </Box>
+
+            <TextField
+              name="coAdvisorEmail"
+              fullWidth
+              multiline
+              rows={1}
+              value={formData.coAdvisorEmail}
+              onChange={handleChange}
+            />
+            <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography variant="h7" gutterBottom>
                     Upload your CV *
                 </Typography>

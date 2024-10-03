@@ -21,9 +21,9 @@ const ProfilePage = () => {
     const navigate = useNavigate();
     useEffect(() => {
         
-        if(!localStorage.getItem('User')){
-            navigate('/login')
-        }
+        // if(!localStorage.getItem('User')){
+        //     navigate('/login')
+        // }
         // Placeholder for loading existing user data if available
         const loadData = async () => {
             const token = localStorage.getItem('User'); // assuming token is stored this way
@@ -77,7 +77,7 @@ const ProfilePage = () => {
     return (
         <Container>
             <ResponsiveAppBar />
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4, paddingBottom: 2 }}>
+            <Box component="form" sx={{ mt: 4, paddingBottom: 2 }}>
                 <Typography variant="h4">Profile</Typography>
                 <TextField
                     fullWidth
@@ -204,7 +204,7 @@ const ProfilePage = () => {
                 <FormGroup>
                     <FormControlLabel control={<Checkbox checked={profile.acmMailingList} onChange={handleCheckboxChange} />} label="Please Add me to ACM mailing list" />
                 </FormGroup>
-                <Button type="submit" variant="contained" sx={{ mt: 2 }}>Save Profile</Button>
+                <Button type="submit" onClick={handleSubmit} variant="contained" sx={{ mt: 2 }}>Save Profile</Button>
             </Box>
         </Container>
     );

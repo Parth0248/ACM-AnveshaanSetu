@@ -15,7 +15,7 @@ import ACMLogo from "../../logos/ACM.png";
 import { Link, useNavigate } from "react-router-dom";
 
 const pages = ["Applications"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
 
 function ResponsiveAppBar({ isLoggedIn }) {
   isLoggedIn = true; // TODO: Remove this and replace it with Logic
@@ -31,6 +31,13 @@ function ResponsiveAppBar({ isLoggedIn }) {
   };
 
   const handleCloseNavMenu = () => {
+    if (localStorage.getItem("User") == "mentor") {
+      window.location.href = "/mentorDashboard";
+    }
+    else {
+      window.location.href = "/myApplications";
+    }
+
     setAnchorElNav(null);
   };
 
