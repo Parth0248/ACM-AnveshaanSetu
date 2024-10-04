@@ -59,7 +59,7 @@ const ApplicationPage = () => {
       console.log(err)
     }
   };
-
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('User');
@@ -75,12 +75,13 @@ const ApplicationPage = () => {
           headers: {"Authorization": `Bearer ${token}`},
         }
       );
+      navigate("/myApplications")
     } catch (error) {
       console.error("Submission error", error);
     }
   };
 
-  const navigate = useNavigate();
+  
 
   React.useEffect(()=>{
       if(!localStorage.getItem('User')){

@@ -74,8 +74,8 @@ router.get("/get-mentors", async (req, res)=>{
         var [results, fields] = await connection.execute(query)
         var final_output  = []
         results.forEach(ele => {
-            final_output.append({
-                label : `${ele['FirstNaMe']} ${ele['LastName']}, ${ele['Working_Place']} - ${ele['ResearchAreas']}`,
+            final_output.push({
+                label : `${ele['FirstName']} ${ele['LastName']}, ${ele['Affiliation']} - ${ele['ResearchAreas']}`,
                 value: ele['Id']
             })
         });
