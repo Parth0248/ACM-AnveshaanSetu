@@ -4,6 +4,7 @@ import SignUpForm from './signUpForm';
 import validatePasswordStrength from './validatePassword';
 import handleSignUpSubmit from './handleSignUpSubmit';
 import { useNavigate } from 'react-router-dom';
+import googleLogo from "../logIn/Icon/web_light_sq_ctn@1x.png";
 
 const SignUpPage = () => {
   const [passwordStrength, setPasswordStrength] = useState("");
@@ -32,6 +33,10 @@ const SignUpPage = () => {
       }
     }
   };
+  
+  const google = async () => {
+    window.open("http://localhost:8000/auth/google", "_self");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,6 +85,7 @@ const SignUpPage = () => {
           </Box>
         )}
         <SignUpForm user={user} handleChange={handleChange} handleSubmit={handleSubmit} />
+        <img src={googleLogo} alt="Google Logo" onClick={google} style={{ cursor: 'pointer' }}/>
       </Box>
     </Container>
   );

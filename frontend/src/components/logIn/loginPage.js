@@ -53,9 +53,11 @@ const LoginPage = () => {
         <Typography component="h1" variant="h4">
           Login
         </Typography>
-        <LoginForm credentials={credentials} handleChange={handleChange} handleSubmit={(e)=>{e.preventDefault(); handleSubmit(credentials, navigate)}} error={error} />
+        <LoginForm credentials={credentials} handleChange={handleChange} handleSubmit={(e)=>{e.preventDefault(); handleSubmit(credentials, navigate, setError)}} error={error} />
         <img src={googleLogo} alt="Google Logo" onClick={google} style={{ cursor: 'pointer' }}/>
       </Box>
+      <Typography variant="body2" sx={{ mt: 2 }}>Don't have an account? <a href="/signup">Sign Up</a></Typography>
+      <Typography variant="body2" sx={{ mt: 2 }}>Forgot Password? <a href="/forgotPassword">Recover</a></Typography>
     </Container>
   );
 };
