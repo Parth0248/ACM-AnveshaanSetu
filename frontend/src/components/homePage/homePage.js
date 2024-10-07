@@ -17,9 +17,11 @@ const HeroSection = () => (
         <Typography variant="h6" sx={{ mb: 2 }}>
             Bridging the gap between aspiring researchers and established mentors.
         </Typography>
+        {localStorage.getItem('type') ==='user' &&(
         <Button component={Link} to="/apply" variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
             Apply Now
         </Button>
+        )}
     </Box>
 );
 
@@ -232,9 +234,10 @@ const HomePage = () => {
     const navigate = useNavigate();
 
     React.useEffect(()=>{
-        // if(!localStorage.getItem('User')){
-        //     navigate('/login')
-        // }
+        if(!localStorage.getItem('User')){
+            // navigate('/login')
+            console.log('Uncomment navigate to login')
+        }
     })
     return (
         <Container>

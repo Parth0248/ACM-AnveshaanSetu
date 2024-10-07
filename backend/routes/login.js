@@ -17,9 +17,8 @@ router.use("/login", async (req, res) => {
         const login_admin = `SELECT * from admin where Email="${email}"`;
         const login_user = `SELECT * from users where Email="${email}"`;
         const login_mentor = `SELECT * from Mentor where Email="${email}"`;
-
         var [results, fields] = await connection.execute(login_admin);
-        
+
         if(results?.length > 0){
             if(password.localeCompare(results[0].Password) == 0){
                 return res.status(200).json({

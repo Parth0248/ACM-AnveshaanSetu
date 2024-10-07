@@ -15,6 +15,9 @@ import ACMLogo from "../../logos/ACM.png";
 import { Link, useNavigate } from "react-router-dom";
 
 const pages = ["Applications"];
+if (localStorage.getItem("type") == "admin") {
+  pages.push("Add Mentor");
+}
 const settings = ["Profile", "Logout"];
 
 function ResponsiveAppBar({ isLoggedIn }) {
@@ -31,11 +34,14 @@ function ResponsiveAppBar({ isLoggedIn }) {
   };
 
   const handleCloseNavMenu = () => {
-    if (localStorage.getItem("User") == "mentor") {
-      window.location.href = "/mentorDashboard";
-    }
-    else {
-      window.location.href = "/myApplications";
+    if (pages == "Applications") {
+      if (localStorage.getItem("type") == "mentor") {
+        window.location.href = "/mentorDashboard";
+      } else {
+        window.location.href = "/myApplications";
+      }
+    } else if (pages == "Add Mentor") {
+      window.location.href = "/addNewMentor";
     }
 
     setAnchorElNav(null);
@@ -44,17 +50,25 @@ function ResponsiveAppBar({ isLoggedIn }) {
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
     if (setting === "Profile") {
-      window.location.href = "/profile";
-    } 
-    else if (setting === "Logout") {
+      if (localStorage.getItem("type") == "mentor") {
+        window.location.href = "/mentorProfile";
+      } else if (localStorage.getItem("type") == "mentee") {
+        window.location.href = "/profile";
+      }
+    } else if (setting === "Logout") {
       localStorage.clear();
       window.location.href = "/";
     }
   };
 
   const handleLogoClick = () => {
-    window.location.href = "/";
-
+    if (localStorage.getItem("type") == "mentor") {
+      window.location.href = "/";
+    } else if (localStorage.getItem("type") == "mentee") {
+      window.location.href = "/";
+    } else {
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -65,7 +79,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <div
+          <div
             onClick={handleLogoClick}
             style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
           >
@@ -74,27 +88,25 @@ function ResponsiveAppBar({ isLoggedIn }) {
               alt="ACM Logo"
               sx={{ width: 60, height: 60 }}
             />
+
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+                padding: "10px",
+              }}
+            >
+              Anveshan Setu
+            </Typography>
           </div>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#"
-            onClick={() => {handleLogoClick(); handleCloseNavMenu();}}
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-              padding: "10px",
-            }}
-          >
-            Anveshan Setu
-          </Typography>
-          
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -141,7 +153,6 @@ function ResponsiveAppBar({ isLoggedIn }) {
               </Button>
             ))}
           </Box>
-          
 
           <Box sx={{ flexGrow: 0 }}>
             {isLoggedIn ? (
@@ -177,7 +188,10 @@ function ResponsiveAppBar({ isLoggedIn }) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => handleCloseUserMenu(setting)}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -187,127 +201,5 @@ function ResponsiveAppBar({ isLoggedIn }) {
       </Container>
     </AppBar>
   );
-  // return (
-  //   <AppBar position="static" color="primary" style={{ backgroundColor: '#121212' , borderRadius: '10px' }}>
-  //     <Container maxWidth="xl">
-  //       <Toolbar disableGutters>
-  //         {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-  //         <Typography
-  //           variant="h6"
-  //           noWrap
-  //           component="a"
-  //           href="#app-bar-with-responsive-menu"
-  //           sx={{
-  //             mr: 2,
-  //             display: { xs: 'none', md: 'flex' },
-  //             fontFamily: 'monospace',
-  //             fontWeight: 700,
-  //             letterSpacing: '.3rem',
-  //             color: 'inherit',
-  //             textDecoration: 'none',
-  //           }}
-  //         >
-
-  //         </Typography>
-
-  //         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-  //           <IconButton
-  //             size="large"
-  //             aria-label="account of current user"
-  //             aria-controls="menu-appbar"
-  //             aria-haspopup="true"
-  //             onClick={handleOpenNavMenu}
-  //             color="inherit"
-  //           >
-  //             <MenuIcon />
-  //           </IconButton>
-  //           <Menu
-  //             id="menu-appbar"
-  //             anchorEl={anchorElNav}
-  //             anchorOrigin={{
-  //               vertical: 'bottom',
-  //               horizontal: 'left',
-  //             }}
-  //             keepMounted
-  //             transformOrigin={{
-  //               vertical: 'top',
-  //               horizontal: 'left',
-  //             }}
-  //             open={Boolean(anchorElNav)}
-  //             onClose={handleCloseNavMenu}
-  //             sx={{ display: { xs: 'block', md: 'none' } }}
-  //           >
-  //             {pages.map((page) => (
-  //               <MenuItem key={page} onClick={handleCloseNavMenu}>
-  //                 <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
-  //               </MenuItem>
-  //             ))}
-  //           </Menu>
-  //         </Box>
-  //         <div onClick={handleLogoClick} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-  //         <Avatar src={ACMLogo} alt="ACM Logo" sx={{ width: 60, height: 60 }} />
-  //       </div>
-  //         {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
-  //         <Typography
-  //           variant="h5"
-  //           noWrap
-  //           component="a"
-  //           href="#app-bar-with-responsive-menu"
-  //           sx={{
-  //             mr: 2,
-  //             display: { xs: 'flex', md: 'none' },
-  //             flexGrow: 1,
-  //             fontFamily: 'monospace',
-  //             fontWeight: 700,
-  //             letterSpacing: '.3rem',
-  //             color: 'inherit',
-  //             textDecoration: 'none',
-  //           }}
-  //         >
-  //         </Typography>
-  //         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-  //           {pages.map((page) => (
-  //             <Button
-  //               key={page}
-  //               onClick={handleCloseNavMenu}
-  //               sx={{ my: 2, color: 'white', display: 'block' }}
-  //             >
-  //               {page}
-  //             </Button>
-  //           ))}
-  //         </Box>
-  //         <Box sx={{ flexGrow: 0 }}>
-  //           <Tooltip title="Open settings">
-  //             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-  //               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-  //             </IconButton>
-  //           </Tooltip>
-  //           <Menu
-  //             sx={{ mt: '45px' }}
-  //             id="menu-appbar"
-  //             anchorEl={anchorElUser}
-  //             anchorOrigin={{
-  //               vertical: 'top',
-  //               horizontal: 'right',
-  //             }}
-  //             keepMounted
-  //             transformOrigin={{
-  //               vertical: 'top',
-  //               horizontal: 'right',
-  //             }}
-  //             open={Boolean(anchorElUser)}
-  //             onClose={handleCloseUserMenu}
-  //           >
-  //             {settings.map((setting) => (
-  //               <MenuItem key={setting} onClick={handleCloseUserMenu}>
-  //                 <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-  //               </MenuItem>
-  //             ))}
-  //           </Menu>
-  //         </Box>
-  //       </Toolbar>
-  //     </Container>
-  //   </AppBar>
-  // );
 }
 export default ResponsiveAppBar;

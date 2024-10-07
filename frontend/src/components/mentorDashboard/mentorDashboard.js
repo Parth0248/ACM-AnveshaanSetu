@@ -1,25 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
   Typography,
   Button,
-  Modal,
-  Card,
-  CardContent,
   List,
   ListItem,
   ListItemText,
   AppBar,
   Toolbar,
   IconButton,
-  Avatar,
   Dialog,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import ResponsiveAppBar from "../navbar/navbar";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import Modal from '@mui/material/Modal';
+import { styled } from '@mui/material/styles';
 
 const dummyApplications = [
   {
@@ -147,42 +148,30 @@ const dummyApplications = [
       "Collaborate on improving algorithm efficiency and security.",
     advisorName: "Dr. Sam Wilson",
     advisorEmail: "sam.wilson@iisc.ac.in",
-    status: "",
+    status: "Pending",
   },
 ];
 
-// write a code to handle the Accept and Reject buttons. create a new Status field in the application object and update it accordingly.
-
-const handleAccept = (selectedApplication) => {
-  if (
-    window.confirm(
-      "Are you sure you wish to Accept this candidate? The decision can be edited later."
-    )
-  ) {
-    console.log(`Accepted application with ID: ${selectedApplication.id}`);
-    dummyApplications.find((app) => app.id === selectedApplication.id).status =
-      "Accepted";
-  }
-};
-
-const handleReject = (selectedApplication) => {
-  if (
-    window.confirm(
-      "Are you sure you wish to Reject this candidate? The decision can be edited later."
-    )
-  ) {
-    console.log(`Rejected application with ID: ${selectedApplication.id}`);
-    dummyApplications.find((app) => app.id === selectedApplication.id).status =
-      "Rejected";
-  }
-};
-
 const MentorDashboard = () => {
+  const [allApplications, setAllApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [open, setOpen] = useState(false);
   const [openFileViewer, setOpenFileViewer] = useState(false);
   const [fileToView, setFileToView] = useState("");
-
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const Modalstyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
   const handleOpen = (app) => {
     setSelectedApplication(app);
     setOpen(true);
@@ -193,6 +182,7 @@ const MentorDashboard = () => {
   };
 
   const handleOpenFileViewer = (fileUrl) => {
+    fileUrl = `${process.env.REACT_APP_API_URL}/${fileUrl}`;
     window.open(fileUrl, "_blank");
   };
 
@@ -200,7 +190,78 @@ const MentorDashboard = () => {
     setOpenFileViewer(false);
   };
 
+  const handleFinalAccept = async (selectedApplication) => {
+    const token = localStorage.getItem("User"); // assuming token is stored this way
+    // console.log("Selected Application: ", selectedApplication.firstName);
+    try {
+        await axios.post(
+          "/mentor/acceptApplication",
+          { id: selectedApplication.id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const acceptedApplication = allApplications.find(
+          (app) => app.id === selectedApplication.id
+        );
+        if (acceptedApplication) {
+          acceptedApplication.status = "Accepted";
+        }
+    } catch (error) {
+        if (error.response && error.response.status === 400) {
+            // Handle 400 error
+        } else if (error.response && error.response.status === 401) {
+            // Handle 401 error
+        }
+    }
+    await handleCloseModal();
+    await handleClose();
+
+  };
+
+  const handleFinalReject = async (selectedApplication) => {
+    const token = localStorage.getItem("User"); // assuming token is stored this way
+    // console.log("Rejected Application :", selectedApplication.firstName);
+    try {
+        await axios.post(
+          "/mentor/rejectApplication",
+          { id: selectedApplication.id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const rejectedApplication = allApplications.find(
+          (app) => app.id === selectedApplication.id
+        );
+        if (rejectedApplication) {
+          rejectedApplication.status = "Rejected";
+        }
+    } catch (error) {
+        if (error.response && error.response.status === 400) {
+            // Handle 400 error
+        } else if (error.response && error.response.status === 401) {
+            // Handle 401 error
+        }
+    }
+    await handleCloseModal();
+    await handleClose();
+  };
   // maintain a list of 10 mui colour from their palette and assign them to the AppBar and Card components
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!localStorage.getItem("User")) {
+      navigate('/login')
+      // console.log("uncomment navigate to login");
+    }
+    const loadData = async () => {
+      const token = localStorage.getItem("User"); // assuming token is stored this way
+      try {
+        const response = await axios.get("/mentor/applications", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setAllApplications(response.data);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+    loadData();
+  }, []);
 
   return (
     <Container>
@@ -209,11 +270,12 @@ const MentorDashboard = () => {
         Anveshan Setu Applications
       </Typography>
       <Typography variant="h6">
-        Hi Prof. Parth Maradia, you have {dummyApplications.length} applications
+        Hi Prof. Parth Maradia, you have {allApplications.length} applications
       </Typography>
 
       <List>
         {dummyApplications.map((app, index) => (
+          // {allApplications.map((app, index) => (
           <ListItem
             key={index}
             button
@@ -238,6 +300,9 @@ const MentorDashboard = () => {
             )}
             {app.status === "Rejected" && (
               <CancelIcon sx={{ color: "red", ml: 2 }} />
+            )}
+            {app.status === "Pending" && (
+              <PendingActionsIcon sx={{ color: "#ffc400", ml: 2 }} />
             )}
           </ListItem>
         ))}
@@ -389,7 +454,88 @@ const MentorDashboard = () => {
               sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
             >
               <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                <Button
+              <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+            >
+              <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                <Box>
+                  <Button variant="contained" onClick={() => setOpenModal('accept')} sx={{
+                    backgroundColor: "green",
+                    color: "white",
+                    display: "flex",
+                    alignItems: "center",
+                  }}>
+                    <CheckCircleIcon sx={{ mr: 1 }} /> Accept
+                  </Button>
+                  <Modal
+                    open={openModal === 'accept'}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={Modalstyle}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h6"
+                        component="h2"
+                      >
+                        Confirm Selection
+                      </Typography>
+                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Are you sure you wish to <strong>accept</strong> {selectedApplication.firstName}? The decision can be edited later.
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                        <Button onClick={() => handleFinalAccept(selectedApplication)} variant="contained">
+                          Confirm
+                        </Button>
+                        <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Modal>
+                </Box>
+
+                <Box>
+                  <Button variant="contained" onClick={() => setOpenModal('reject')} sx={{
+                    backgroundColor: "red",
+                    color: "white",
+                    display: "flex",
+                    alignItems: "center",
+                  }}>
+                    <CancelIcon sx={{ mr: 1 }} /> Reject
+                  </Button>
+                  <Modal
+                    open={openModal === 'reject'}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={Modalstyle}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h6"
+                        component="h2"
+                      >
+                        Confirm Rejection
+                      </Typography>
+                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Are you sure you wish to <strong>reject</strong> {selectedApplication.firstName}? The decision can be edited later.
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                        <Button onClick={() => handleFinalReject(selectedApplication)} variant="contained">
+                          Confirm
+                        </Button>
+                        <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Modal>
+                </Box>
+              </Box>
+            </Box>
+                {/* <Button
                   variant="contained"
                   onClick={() => handleAccept(selectedApplication)}
                   sx={{
@@ -400,8 +546,8 @@ const MentorDashboard = () => {
                   }}
                 >
                   <CheckCircleIcon sx={{ mr: 1 }} /> Accept
-                </Button>
-                <Button
+                </Button> */}
+                {/* <Button
                   variant="contained"
                   onClick={() => handleReject(selectedApplication)}
                   sx={{
@@ -412,7 +558,8 @@ const MentorDashboard = () => {
                   }}
                 >
                   <CancelIcon sx={{ mr: 1 }} /> Reject
-                </Button>
+                </Button> */}
+
               </Box>
             </Box>
           </Box>

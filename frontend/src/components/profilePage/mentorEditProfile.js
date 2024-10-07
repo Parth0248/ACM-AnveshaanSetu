@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Box, TextField, Grid } from '@mui/material';
 import ResponsiveAppBar from '../navbar/navbar';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const MentorEditProfilePage = () => {
 
     const [profile, setProfile] = useState({
-        affiliation: 'Massachusetts Institute of Technology',
-        areasOfExpertise: 'Artificial Intelligence, Machine Learning, Blockchain',
-        mobileNumber: '123-456-7890'
+        affiliation: '',
+        areasOfExpertise: '',
+        mobileNumber: ''
     });
 
     const handleChange = (event) => {
@@ -16,12 +17,40 @@ const MentorEditProfilePage = () => {
         setProfile({ ...profile, [name]: value });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // POST request to backend to update profile
-        console.log('Profile updated:', profile);
-        window.location.href = '/mentorProfile';
+        const token = localStorage.getItem('User');
+        try {
+            console.log(profile)
+            await axios.post('/mentor/edit_profile', profile, { headers: { Authorization: `Bearer ${token}` } });
+            alert('Profile updated successfully!');
+            navigate('/mentorProfile')
+        } catch (error) {
+            console.error('Error updating profile:', error);
+        }
     };
+
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(!localStorage.getItem('User')){
+            navigate('/login')
+        }
+        const loadData = async () => {
+            const token = localStorage.getItem('User'); // assuming token is stored this way
+            try {
+                const response = await axios.get('/mentor/edit_profile', { headers: { Authorization: `Bearer ${token}` } });
+                var user = response.data;
+                setProfile({
+                    affiliation: user['Affiliation'] || '',
+                        areasOfExpertise: user['ResearchAreas'] || '',
+                        mobileNumber: user['MobileNumber'] || ''
+                });
+            } catch (error) {
+                console.error('Error fetching profile data:', error);
+            }
+        };
+        loadData();
+    },[])
 
     return (
         <Container>

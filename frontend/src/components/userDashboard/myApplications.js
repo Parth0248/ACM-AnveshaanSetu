@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import {
   Container,
   Typography,
@@ -16,26 +17,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ResponsiveAppBar from "../navbar/navbar";
-
-// Dummy data for applications
-const dummyApplications = [
-  {
-    id: 1,
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    affiliation: "University of Example",
-    yearOfPhD: "2nd",
-    firstPreference: "Prof. Abhijan Chakraborty",
-    firstPreferenceStatus: "Accepted",
-    secondPreference: "Prof. Arindam Khan",
-    secondPreferenceStatus: "Rejected",
-    researchProblem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  // Additional dummy applications can be added here
-];
+import { useNavigate } from 'react-router';
 
 const UserDashboard = () => {
+  const [allApplications, setAllApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -48,6 +33,22 @@ const UserDashboard = () => {
     setOpen(false);
   };
 
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(!localStorage.getItem('User')){
+      navigate('/login')
+    }
+    const loadData = async () => {
+      const token = localStorage.getItem('User'); // assuming token is stored this way
+      try {
+          const response = await axios.get('/mentee/applications', { headers: { Authorization: `Bearer ${token}` } });
+          setAllApplications(response.data)
+      } catch (error) {
+          console.error('Error fetching profile data:', error);
+      }
+    };
+    loadData()
+  },[])
   return (
     <Container>
       <ResponsiveAppBar />
@@ -55,7 +56,7 @@ const UserDashboard = () => {
         My Applications
       </Typography>
       <List>
-        {dummyApplications.map((application) => (
+        {allApplications.map((application) => (
           <ListItem
             key={application.id}
             button

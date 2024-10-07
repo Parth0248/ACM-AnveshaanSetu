@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static("../uploads"));
 app.use("/auth",require("./routes/login.js"));
 app.use("/mentee",require("./routes/mentee.js"));
+app.use("/mentor",require("./routes/mentor.js"));
 
 
 const PORT = 8000
