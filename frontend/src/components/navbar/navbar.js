@@ -12,19 +12,15 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import ACMLogo from "../../logos/ACM.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const pages = ["Applications"];
-if (localStorage.getItem("type") == "admin") {
-  pages.push("Add Mentor");
-}
-const settings = ["Profile", "Logout"];
 
-function ResponsiveAppBar({ isLoggedIn }) {
-  isLoggedIn = true; // TODO: Remove this and replace it with Logic
+function ResponsiveAppBar({ pages }) {
+  const settings = ["Profile", "Logout"];
+  var pages = pages;
+  var isLoggedIn = true; // TODO: Remove this and replace it with Logic
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  // const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -33,14 +29,17 @@ function ResponsiveAppBar({ isLoggedIn }) {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    if (pages == "Applications") {
-      if (localStorage.getItem("type") == "mentor") {
+  const handleCloseNavMenu = (page) => {
+    console.log(page)
+    if (page === "APPLICATIONS") {
+      if (localStorage.getItem("type") === "mentor") {
         window.location.href = "/mentorDashboard";
+      } else if(localStorage.getItem("type") === "admin"){
+        window.location.href = "/adminDashboard";
       } else {
         window.location.href = "/myApplications";
       }
-    } else if (pages == "Add Mentor") {
+    } else if (page === "ADD MENTOR") {
       window.location.href = "/addNewMentor";
     }
 
@@ -50,10 +49,12 @@ function ResponsiveAppBar({ isLoggedIn }) {
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
     if (setting === "Profile") {
-      if (localStorage.getItem("type") == "mentor") {
+      if (localStorage.getItem("type") === "mentor") {
         window.location.href = "/mentorProfile";
-      } else if (localStorage.getItem("type") == "mentee") {
+      } else if (localStorage.getItem("type") === "mentee") {
         window.location.href = "/profile";
+      } else if (localStorage.getItem("type") === "admin") {
+        window.location.href = "/adminProfile";
       }
     } else if (setting === "Logout") {
       localStorage.clear();
@@ -62,15 +63,9 @@ function ResponsiveAppBar({ isLoggedIn }) {
   };
 
   const handleLogoClick = () => {
-    if (localStorage.getItem("type") == "mentor") {
-      window.location.href = "/";
-    } else if (localStorage.getItem("type") == "mentee") {
-      window.location.href = "/";
-    } else {
-      window.location.href = "/";
-    }
+    window.location.href = "/";
   };
-
+  
   return (
     <AppBar
       position="static"
@@ -135,7 +130,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={()=>handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -146,7 +141,7 @@ function ResponsiveAppBar({ isLoggedIn }) {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={()=>handleCloseNavMenu(page)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

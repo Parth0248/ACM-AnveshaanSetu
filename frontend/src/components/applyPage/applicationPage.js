@@ -92,7 +92,7 @@ const ApplicationPage = () => {
 
   return (
     <Container>
-      <ResponsiveAppBar />
+      <ResponsiveAppBar pages={['APPLICATIONS']}/>
       <Box sx={{ mt: 4, paddingBottom: 2 }}>
         <Typography variant="h4" gutterBottom>
           Application Form

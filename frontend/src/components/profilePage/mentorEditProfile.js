@@ -21,7 +21,6 @@ const MentorEditProfilePage = () => {
         event.preventDefault();
         const token = localStorage.getItem('User');
         try {
-            console.log(profile)
             await axios.post('/mentor/edit_profile', profile, { headers: { Authorization: `Bearer ${token}` } });
             alert('Profile updated successfully!');
             navigate('/mentorProfile')
@@ -54,7 +53,7 @@ const MentorEditProfilePage = () => {
 
     return (
         <Container>
-            <ResponsiveAppBar />
+            <ResponsiveAppBar pages={['APPLICATIONS']}/>
             <Typography variant="h4" sx={{ mt: 4, mb: 2, fontWeight: 'bold' }}>Edit Mentor Profile</Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
                 <Grid container spacing={2}>

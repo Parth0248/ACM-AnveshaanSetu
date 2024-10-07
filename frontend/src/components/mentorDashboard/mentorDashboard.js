@@ -20,147 +20,19 @@ import ResponsiveAppBar from "../navbar/navbar";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import Modal from '@mui/material/Modal';
-import { styled } from '@mui/material/styles';
-
-const dummyApplications = [
-  {
-    id: 1,
-    firstName: "Parth",
-    lastName: "Maradia",
-    affiliation: "IIIT Hyderabad",
-    yearOfPhd: "2nd year",
-    email: "parth.m@research.iiit.ac.in",
-    gender: "Male",
-    phdRegistration: "Part-time",
-    justification:
-      "I am interested in AI and ML because they are transforming the way we understand data.",
-    coursework: "Advanced Machine Learning, 85%",
-    researchExperience:
-      "Published 2 papers on AI ethics and participated in AI workshops.",
-    onlineCourses: "Completed Coursera AI Specialization",
-    firstPreference: "Prof. Abhijan Chakraborty, IIT Delhi",
-    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
-    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
-    goals:
-      "Gain hands-on experience with AI models and get guidance for my dissertation.",
-    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
-    statementOfPurpose:
-      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
-    consentLetter:
-      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
-    researchProblem: "Working on AI fairness and biases in models.",
-    specificActivities:
-      "Learn about real-world applications of AI in societal contexts.",
-    advisorName: "Dr. Jane Smith",
-    advisorEmail: "jane.smith@iitb.ac.in",
-    coAdvisorName: "Dr. Alan Turing",
-    coAdvisorEmail: "alan.turing@iitb.ac.in",
-    status: "Accepted",
-  },
-  {
-    id: 2,
-    firstName: "Nipun",
-    lastName: "Tulsian",
-    affiliation: "IIIT Hyderabad",
-    yearOfPhd: "1st year",
-    email: "nipun.tulsian@students.iiit.ac.in",
-    gender: "Male",
-    phdRegistration: "Full-time",
-    justification:
-      "I have always been passionate about cybersecurity and protecting data integrity.",
-    coursework: "Cryptography, 90%",
-    researchExperience: "Research assistant in the Cybersecurity Lab at IISc.",
-    onlineCourses: "Completed Udemy course on Ethical Hacking",
-    firstPreference: "Prof. Ankit Gangwal, IIIT Hyderabad",
-    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
-    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
-    goals: "Understand deeper aspects of cryptography to apply in my research.",
-    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
-    statementOfPurpose:
-      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
-    consentLetter:
-      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
-    researchProblem:
-      "Working on encryption algorithms and their vulnerabilities.",
-    specificActivities:
-      "Collaborate on improving algorithm efficiency and security.",
-    advisorName: "Dr. Sam Wilson",
-    advisorEmail: "sam.wilson@iisc.ac.in",
-    status: "Accepted",
-  },
-  {
-    id: 3,
-    firstName: "Shakira",
-    lastName: "LastName",
-    affiliation: "Waka Waka",
-    yearOfPhd: "5th year",
-    email: "nipun.tulsian@students.iiit.ac.in",
-    gender: "Female",
-    phdRegistration: "Full-time",
-    justification:
-      "I have always been passionate about cybersecurity and protecting data integrity.",
-    coursework: "Cryptography, 90%",
-    researchExperience: "Research assistant in the Cybersecurity Lab at IISc.",
-    onlineCourses: "Completed Udemy course on Ethical Hacking",
-    firstPreference: "Prof. Ankit Gangwal, IIIT Hyderabad",
-    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
-    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
-    goals: "Understand deeper aspects of cryptography to apply in my research.",
-    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
-    statementOfPurpose:
-      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
-    consentLetter:
-      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
-    researchProblem:
-      "Working on encryption algorithms and their vulnerabilities.",
-    specificActivities:
-      "Collaborate on improving algorithm efficiency and security.",
-    advisorName: "Dr. Sam Wilson",
-    advisorEmail: "sam.wilson@iisc.ac.in",
-    status: "Rejected",
-  },
-  {
-    id: 4,
-    firstName: "Yash",
-    lastName: "Sharma",
-    affiliation: "IIT Hyderabad",
-    yearOfPhd: "4th year",
-    email: "nipun.tulsian@students.iiit.ac.in",
-    gender: "Male",
-    phdRegistration: "Full-time",
-    justification:
-      "I have always been passionate about cybersecurity and protecting data integrity.",
-    coursework: "Cryptography, 90%",
-    researchExperience: "Research assistant in the Cybersecurity Lab at IISc.",
-    onlineCourses: "Completed Udemy course on Ethical Hacking",
-    firstPreference: "Prof. Ankit Gangwal, IIIT Hyderabad",
-    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
-    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
-    goals: "Understand deeper aspects of cryptography to apply in my research.",
-    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
-    statementOfPurpose:
-      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
-    consentLetter:
-      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
-    researchProblem:
-      "Working on encryption algorithms and their vulnerabilities.",
-    specificActivities:
-      "Collaborate on improving algorithm efficiency and security.",
-    advisorName: "Dr. Sam Wilson",
-    advisorEmail: "sam.wilson@iisc.ac.in",
-    status: "Pending",
-  },
-];
 
 const MentorDashboard = () => {
   const [allApplications, setAllApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [open, setOpen] = useState(false);
-  const [openFileViewer, setOpenFileViewer] = useState(false);
-  const [fileToView, setFileToView] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const [profile, setProfile] = useState({
+    firstName: '',
+    lastName: '',
+  });
+
   const Modalstyle = {
     position: 'absolute',
     top: '50%',
@@ -186,10 +58,6 @@ const MentorDashboard = () => {
     window.open(fileUrl, "_blank");
   };
 
-  const handleCloseFileViewer = () => {
-    setOpenFileViewer(false);
-  };
-
   const handleFinalAccept = async (selectedApplication) => {
     const token = localStorage.getItem("User"); // assuming token is stored this way
     // console.log("Selected Application: ", selectedApplication.firstName);
@@ -212,9 +80,8 @@ const MentorDashboard = () => {
             // Handle 401 error
         }
     }
-    await handleCloseModal();
-    await handleClose();
-
+    handleCloseModal();
+    handleClose();
   };
 
   const handleFinalReject = async (selectedApplication) => {
@@ -239,15 +106,14 @@ const MentorDashboard = () => {
             // Handle 401 error
         }
     }
-    await handleCloseModal();
-    await handleClose();
+    handleCloseModal();
+    handleClose();
   };
   // maintain a list of 10 mui colour from their palette and assign them to the AppBar and Card components
   const navigate = useNavigate();
   useEffect(() => {
     if (!localStorage.getItem("User")) {
       navigate('/login')
-      // console.log("uncomment navigate to login");
     }
     const loadData = async () => {
       const token = localStorage.getItem("User"); // assuming token is stored this way
@@ -259,22 +125,35 @@ const MentorDashboard = () => {
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
+
+      try {
+        const response = await axios.get("/mentor/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setProfile({
+                    'firstName' : response.data['FirstName'],
+                    'lastName' : response.data['LastName'],
+        });
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+
     };
     loadData();
   }, []);
 
   return (
     <Container>
-      <ResponsiveAppBar />
+      <ResponsiveAppBar pages={['APPLICATIONS']}/>
       <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
         Anveshan Setu Applications
       </Typography>
       <Typography variant="h6">
-        Hi Prof. Parth Maradia, you have {allApplications.length} applications
+        Hi Prof. {profile['firstName']} {profile['lastName']}, you have {allApplications.length} applications
       </Typography>
 
       <List>
-        {dummyApplications.map((app, index) => (
+        {allApplications.map((app, index) => (
           // {allApplications.map((app, index) => (
           <ListItem
             key={index}

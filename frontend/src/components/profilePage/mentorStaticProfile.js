@@ -10,7 +10,6 @@ const MentorStaticProfilePage = () => {
         window.location.href = '/editMentorProfile';
     };
 
-    // Dummy profile data for the mentor
     const [profile, setProfile] = useState({
         firstName: '',
         lastName: '',
@@ -47,7 +46,7 @@ const MentorStaticProfilePage = () => {
 
     return (
         <Container>
-            <ResponsiveAppBar />
+            <ResponsiveAppBar pages={['APPLICATIONS']}/>
             <Typography variant="h4" sx={{ mt: 4, mb: 2, fontWeight: 'bold' }}>Mentor Profile</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold' }}>

@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import ResponsiveAppBar from '../navbar/navbar';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const AddNewMentorPage = () => {
     const [mentor, setMentor] = useState({
         firstName: '',
         lastName: '',
         affiliation: '',
-        email: ''
+        email: '',
+        researchAreas: ''
     });
 
     const handleChange = (event) => {
@@ -17,14 +20,34 @@ const AddNewMentorPage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // Placeholder for POST request
-        console.log('Submitting new mentor:', mentor);
-        // Example: axios.post('/api/mentors', mentor);
+        const token = localStorage.getItem('User');
+        try {
+            const response = await axios.post('/admin/add_mentor', mentor, { headers: { Authorization: `Bearer ${token}` } });
+            if (response.status===200){
+                alert('Mentor Added successfully!');
+                setMentor({
+                    firstName: '',
+                    lastName: '',
+                    affiliation: '',
+                    email: '',
+                    researchAreas: ''
+                })
+            }
+            
+        } catch (error) {
+            console.error('Error adding mentor:', error);
+        }
     };
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(!localStorage.getItem('User')){
+            navigate('/login')
+        }
+    },[])
 
     return (
         <Container>
-            <ResponsiveAppBar />
+            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR']}/>
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Add New Mentor</Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
                 <TextField
@@ -60,6 +83,15 @@ const AddNewMentorPage = () => {
                     name="email"
                     type="email"
                     value={mentor.email}
+                    onChange={handleChange}
+                    required
+                    sx={{ mb: 2 }}
+                />
+                <TextField
+                    fullWidth
+                    label="Research Areas"
+                    name="researchAreas"
+                    value={mentor.researchAreas}
                     onChange={handleChange}
                     required
                     sx={{ mb: 2 }}

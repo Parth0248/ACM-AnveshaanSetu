@@ -29,7 +29,7 @@ const handleSubmit = async (credentials, navigate, setError) => {
             
             
             if(type === 'admin'){
-                navigate('/');
+                navigate('/adminDashboard');
             }
             else if(type === 'mentee'){
                 navigate('/');

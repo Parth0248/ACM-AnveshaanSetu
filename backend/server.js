@@ -12,6 +12,7 @@ app.use(express.static("../uploads"));
 app.use("/auth",require("./routes/login.js"));
 app.use("/mentee",require("./routes/mentee.js"));
 app.use("/mentor",require("./routes/mentor.js"));
+app.use("/admin",require("./routes/admin.js"));
 
 
 const PORT = 8000

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
-import ResponsiveAppBar from '../navbar/navbar';
 
 const ForgotPasswordPage = () => {
     const [user, setUser] = useState({
@@ -23,7 +22,6 @@ const ForgotPasswordPage = () => {
 
     return (
         <Container>
-            {/* <ResponsiveAppBar /> */}
             <Typography variant="h3" sx={{ mt: 4 }}>ACM India Anveshan Setu Fellowship</Typography>
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Forgot Password</Typography>
             <Box component="form" onSubmit={handleRecover} sx={{ mt: 4 }}>

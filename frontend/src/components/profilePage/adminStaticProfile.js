@@ -1,25 +1,49 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Container, Typography, Box } from "@mui/material";
 import ResponsiveAppBar from "../navbar/navbar";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
+import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 const AdminStaticProfilePage = () => {
-  // Dummy data for the admin
   const handleEditClick = () => {
     window.location.href = "/editAdminProfile";
   };
+  const navigate = useNavigate()
 
-  const profile = {
-    firstName: "Jane",
-    lastName: "Doe",
-    email: "jane.doe@example.com",
-    affiliation: "Admin University",
-  };
+  const [profile, setProfile] = useState({
+    firstName: '',
+    lastName: '',
+    affiliation: '',
+    email: ''
+  });
+
+  useEffect(()=>{
+    if(!localStorage.getItem('User')){
+      navigate('/login')
+    }
+    const loadData = async ()=>{
+      const token = localStorage.getItem('User'); // assuming token is stored this way
+      try {
+          const response = await axios.get('/admin/profile', { headers: { Authorization: `Bearer ${token}` } });
+          var user = response.data;
+          setProfile({
+              'firstName' : user['FirstName'],
+              'lastName' : user['LastName'],
+              'email' : user['Email'],
+              'affiliation' : user['Affiliation'],
+          });
+      } catch (error) {
+          console.error('Error fetching profile data:', error);
+      }
+  }
+  loadData()
+  },[])
 
   return (
     <Container>
-      <ResponsiveAppBar />
+      <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR']}/>
       <Typography variant="h4" sx={{ mt: 4, mb: 2, fontWeight: "bold" }}>
         Admin Profile
       </Typography>

@@ -51,7 +51,7 @@ const UserDashboard = () => {
   },[])
   return (
     <Container>
-      <ResponsiveAppBar />
+      <ResponsiveAppBar pages={['APPLICATIONS']}/>
       <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
         My Applications
       </Typography>
