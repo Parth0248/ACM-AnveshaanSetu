@@ -18,6 +18,8 @@ const AddNewMentorPage = () => {
         setMentor({ ...mentor, [name]: value });
     };
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const token = localStorage.getItem('User');
@@ -33,12 +35,17 @@ const AddNewMentorPage = () => {
                     researchAreas: ''
                 })
             }
-            
         } catch (error) {
             console.error('Error adding mentor:', error);
+            if(error.response.status === 500){
+                navigate("/serverError")
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized")
+            }
         }
     };
-    const navigate = useNavigate();
+    
     useEffect(()=>{
         if(!localStorage.getItem('User')){
             navigate('/login')

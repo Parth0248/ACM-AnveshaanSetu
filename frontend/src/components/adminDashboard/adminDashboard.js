@@ -22,7 +22,6 @@ const AdminDashboard = () => {
 
     const handleOpenFileViewer = (fileUrl) => {
         fileUrl = `${process.env.REACT_APP_API_URL}/${fileUrl}`;
-        console.log(fileUrl)
         window.open(fileUrl, "_blank");
       };
     
@@ -47,6 +46,12 @@ const AdminDashboard = () => {
             }
         } catch (error) {
             console.error("Error fetching profile data:", error);
+            if(error.response.status === 500){
+                navigate("/serverError")
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized")
+            }
         }
         handleClose();
     }
@@ -68,6 +73,12 @@ const AdminDashboard = () => {
               setAllApplications(response.data);
             } catch (error) {
               console.error("Error fetching profile data:", error);
+              if(error.response.status === 500){
+                navigate("/serverError");
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized");
+            }
             }
         }
         loadData();

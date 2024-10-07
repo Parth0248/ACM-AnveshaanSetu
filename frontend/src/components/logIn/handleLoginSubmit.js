@@ -21,7 +21,7 @@ const handleSubmit = async (credentials, navigate, setError) => {
             },
         });
 
-        if(res.status === 200 || credentials.email === 'admin@acm.org'){
+        if(res.status === 200){
             const type = res.data.type
             
             localStorage.setItem('User', res.data.token);
@@ -40,11 +40,11 @@ const handleSubmit = async (credentials, navigate, setError) => {
             
         }        
     } catch (error) {
-        if (error.response && error.response.status === 400) {
-            // handle wrong password logic
+        if(error.response.status === 500){
+            navigate("/serverError")
         }
-        else if (error.response && error.response.status === 401){
-            // handle pls signup logic
+        else if(error.response.status === 401){
+            navigate("/unauthorized")
         }
     }
 }

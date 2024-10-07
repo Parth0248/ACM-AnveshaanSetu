@@ -28,9 +28,13 @@ const AdminEditProfilePage = () => {
                 alert('Profile updated successfully!');
                 navigate('/adminProfile');
             }
-            
         } catch (error) {
-            console.error('Error updating profile:', error);
+            if(error.response.status === 500){
+                navigate("/serverError")
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized")
+            }
         }
     };
 
@@ -49,7 +53,12 @@ const AdminEditProfilePage = () => {
                     mobileNumber: user['MobileNumber'] || ''
                 });
             } catch (error) {
-                console.error('Error fetching profile data:', error);
+                if(error.response.status === 500){
+                    navigate("/serverError")
+                }
+                else if(error.response.status === 401){
+                    navigate("/unauthorized")
+                }
             }
         };
         loadData();

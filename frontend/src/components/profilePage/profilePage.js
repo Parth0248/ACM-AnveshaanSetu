@@ -42,7 +42,12 @@ const ProfilePage = () => {
                     'acmMailingList' : user['AddToMailingList']
                 });
             } catch (error) {
-                console.error('Error fetching profile data:', error);
+                if(error.response.status === 500){
+                    navigate("/serverError")
+                }
+                else if(error.response.status === 401){
+                    navigate("/unauthorized")
+                }
             }
         };
         loadData();

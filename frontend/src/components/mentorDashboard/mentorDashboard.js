@@ -74,11 +74,12 @@ const MentorDashboard = () => {
           acceptedApplication.status = "Accepted";
         }
     } catch (error) {
-        if (error.response && error.response.status === 400) {
-            // Handle 400 error
-        } else if (error.response && error.response.status === 401) {
-            // Handle 401 error
-        }
+      if(error.response.status === 500){
+        navigate("/serverError")
+      }
+      else if(error.response.status === 401){
+          navigate("/unauthorized")
+      }
     }
     handleCloseModal();
     handleClose();
@@ -100,11 +101,12 @@ const MentorDashboard = () => {
           rejectedApplication.status = "Rejected";
         }
     } catch (error) {
-        if (error.response && error.response.status === 400) {
-            // Handle 400 error
-        } else if (error.response && error.response.status === 401) {
-            // Handle 401 error
-        }
+      if(error.response.status === 500){
+        navigate("/serverError")
+      }
+      else if(error.response.status === 401){
+          navigate("/unauthorized")
+      }
     }
     handleCloseModal();
     handleClose();

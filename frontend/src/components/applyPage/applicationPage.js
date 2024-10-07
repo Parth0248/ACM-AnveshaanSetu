@@ -55,8 +55,13 @@ const ApplicationPage = () => {
     try {
       const response = await axios.get("/mentee/get-mentors")
       setFacultyOptions(response.data)
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+        if(error.response.status === 500){
+          navigate("/serverError")
+      }
+      else if(error.response.status === 401){
+          navigate("/unauthorized")
+      }
     }
   };
   const navigate = useNavigate();
@@ -78,6 +83,12 @@ const ApplicationPage = () => {
       navigate("/myApplications")
     } catch (error) {
       console.error("Submission error", error);
+      if(error.response.status === 500){
+        navigate("/serverError")
+    }
+    else if(error.response.status === 401){
+        navigate("/unauthorized")
+    }
     }
   };
 
