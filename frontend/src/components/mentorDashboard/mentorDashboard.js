@@ -15,17 +15,163 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import ResponsiveAppBar from "../navbar/navbar";
-import axios from 'axios';
-import { useNavigate } from 'react-router';
+import axios from "axios";
+import { useNavigate } from "react-router";
+import Modal from '@mui/material/Modal';
+import { styled } from '@mui/material/styles';
+
+const dummyApplications = [
+  {
+    id: 1,
+    firstName: "Parth",
+    lastName: "Maradia",
+    affiliation: "IIIT Hyderabad",
+    yearOfPhd: "2nd year",
+    email: "parth.m@research.iiit.ac.in",
+    gender: "Male",
+    phdRegistration: "Part-time",
+    justification:
+      "I am interested in AI and ML because they are transforming the way we understand data.",
+    coursework: "Advanced Machine Learning, 85%",
+    researchExperience:
+      "Published 2 papers on AI ethics and participated in AI workshops.",
+    onlineCourses: "Completed Coursera AI Specialization",
+    firstPreference: "Prof. Abhijan Chakraborty, IIT Delhi",
+    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
+    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
+    goals:
+      "Gain hands-on experience with AI models and get guidance for my dissertation.",
+    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
+    statementOfPurpose:
+      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
+    consentLetter:
+      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
+    researchProblem: "Working on AI fairness and biases in models.",
+    specificActivities:
+      "Learn about real-world applications of AI in societal contexts.",
+    advisorName: "Dr. Jane Smith",
+    advisorEmail: "jane.smith@iitb.ac.in",
+    coAdvisorName: "Dr. Alan Turing",
+    coAdvisorEmail: "alan.turing@iitb.ac.in",
+    status: "Accepted",
+  },
+  {
+    id: 2,
+    firstName: "Nipun",
+    lastName: "Tulsian",
+    affiliation: "IIIT Hyderabad",
+    yearOfPhd: "1st year",
+    email: "nipun.tulsian@students.iiit.ac.in",
+    gender: "Male",
+    phdRegistration: "Full-time",
+    justification:
+      "I have always been passionate about cybersecurity and protecting data integrity.",
+    coursework: "Cryptography, 90%",
+    researchExperience: "Research assistant in the Cybersecurity Lab at IISc.",
+    onlineCourses: "Completed Udemy course on Ethical Hacking",
+    firstPreference: "Prof. Ankit Gangwal, IIIT Hyderabad",
+    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
+    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
+    goals: "Understand deeper aspects of cryptography to apply in my research.",
+    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
+    statementOfPurpose:
+      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
+    consentLetter:
+      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
+    researchProblem:
+      "Working on encryption algorithms and their vulnerabilities.",
+    specificActivities:
+      "Collaborate on improving algorithm efficiency and security.",
+    advisorName: "Dr. Sam Wilson",
+    advisorEmail: "sam.wilson@iisc.ac.in",
+    status: "Accepted",
+  },
+  {
+    id: 3,
+    firstName: "Shakira",
+    lastName: "LastName",
+    affiliation: "Waka Waka",
+    yearOfPhd: "5th year",
+    email: "nipun.tulsian@students.iiit.ac.in",
+    gender: "Female",
+    phdRegistration: "Full-time",
+    justification:
+      "I have always been passionate about cybersecurity and protecting data integrity.",
+    coursework: "Cryptography, 90%",
+    researchExperience: "Research assistant in the Cybersecurity Lab at IISc.",
+    onlineCourses: "Completed Udemy course on Ethical Hacking",
+    firstPreference: "Prof. Ankit Gangwal, IIIT Hyderabad",
+    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
+    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
+    goals: "Understand deeper aspects of cryptography to apply in my research.",
+    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
+    statementOfPurpose:
+      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
+    consentLetter:
+      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
+    researchProblem:
+      "Working on encryption algorithms and their vulnerabilities.",
+    specificActivities:
+      "Collaborate on improving algorithm efficiency and security.",
+    advisorName: "Dr. Sam Wilson",
+    advisorEmail: "sam.wilson@iisc.ac.in",
+    status: "Rejected",
+  },
+  {
+    id: 4,
+    firstName: "Yash",
+    lastName: "Sharma",
+    affiliation: "IIT Hyderabad",
+    yearOfPhd: "4th year",
+    email: "nipun.tulsian@students.iiit.ac.in",
+    gender: "Male",
+    phdRegistration: "Full-time",
+    justification:
+      "I have always been passionate about cybersecurity and protecting data integrity.",
+    coursework: "Cryptography, 90%",
+    researchExperience: "Research assistant in the Cybersecurity Lab at IISc.",
+    onlineCourses: "Completed Udemy course on Ethical Hacking",
+    firstPreference: "Prof. Ankit Gangwal, IIIT Hyderabad",
+    secondPreference: "Prof. Arindam Khan, IISc Bangalore",
+    references: "Prof. Kavita Vemuri, IIIT Hyderabad, kavita@iiit.ac.in",
+    goals: "Understand deeper aspects of cryptography to apply in my research.",
+    cv: "https://drive.google.com/file/d/1Oxo22D6pHM_2-WAEx0xhBajorfDwCwXn/view?usp=sharing",
+    statementOfPurpose:
+      "https://docs.google.com/document/d/1evnJ39CnWzj5-L7Y1sxwfGJtnbEBQTZz1DkaciGdShs/edit?usp=sharing",
+    consentLetter:
+      "https://india.acm.org/binaries/content/assets/india/noc_mentee.pdf",
+    researchProblem:
+      "Working on encryption algorithms and their vulnerabilities.",
+    specificActivities:
+      "Collaborate on improving algorithm efficiency and security.",
+    advisorName: "Dr. Sam Wilson",
+    advisorEmail: "sam.wilson@iisc.ac.in",
+    status: "Pending",
+  },
+];
 
 const MentorDashboard = () => {
-  const [allApplications, setAllApplications] = useState([])
+  const [allApplications, setAllApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [open, setOpen] = useState(false);
   const [openFileViewer, setOpenFileViewer] = useState(false);
   const [fileToView, setFileToView] = useState("");
-
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const Modalstyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
   const handleOpen = (app) => {
     setSelectedApplication(app);
     setOpen(true);
@@ -36,7 +182,7 @@ const MentorDashboard = () => {
   };
 
   const handleOpenFileViewer = (fileUrl) => {
-    fileUrl = `${process.env.REACT_APP_API_URL}/${fileUrl}`
+    fileUrl = `${process.env.REACT_APP_API_URL}/${fileUrl}`;
     window.open(fileUrl, "_blank");
   };
 
@@ -44,62 +190,78 @@ const MentorDashboard = () => {
     setOpenFileViewer(false);
   };
 
-  const handleAccept = async (selectedApplication) => {
-    const token = localStorage.getItem('User'); // assuming token is stored this way
-    if (
-      window.confirm(
-        "Are you sure you wish to Accept this candidate? The decision can be edited later."
-      )
-    ) {
-      try{
-        await axios.post('/mentor/acceptApplication', {id:selectedApplication.id}, { headers: { Authorization: `Bearer ${token}` } });
-        allApplications.find((app) => app.id === selectedApplication.id).status = "Accepted";
-      }
-      catch (error) {
+  const handleFinalAccept = async (selectedApplication) => {
+    const token = localStorage.getItem("User"); // assuming token is stored this way
+    // console.log("Selected Application: ", selectedApplication.firstName);
+    try {
+        await axios.post(
+          "/mentor/acceptApplication",
+          { id: selectedApplication.id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const acceptedApplication = allApplications.find(
+          (app) => app.id === selectedApplication.id
+        );
+        if (acceptedApplication) {
+          acceptedApplication.status = "Accepted";
+        }
+    } catch (error) {
         if (error.response && error.response.status === 400) {
+            // Handle 400 error
+        } else if (error.response && error.response.status === 401) {
+            // Handle 401 error
         }
-        else if (error.response && error.response.status === 401){
-        }
-      }
     }
+    await handleCloseModal();
+    await handleClose();
+
   };
 
-  const handleReject = async (selectedApplication) => {
-    const token = localStorage.getItem('User'); // assuming token is stored this way
-    if (
-      window.confirm(
-        "Are you sure you wish to Reject this candidate? The decision can be edited later."
-      )
-    ) {
-      try{
-        await axios.post('/mentor/rejectApplication', {id:selectedApplication.id}, { headers: { Authorization: `Bearer ${token}` } });
-        allApplications.find((app) => app.id === selectedApplication.id).status = "Rejected";
-      }
-      catch (error) {
+  const handleFinalReject = async (selectedApplication) => {
+    const token = localStorage.getItem("User"); // assuming token is stored this way
+    // console.log("Rejected Application :", selectedApplication.firstName);
+    try {
+        await axios.post(
+          "/mentor/rejectApplication",
+          { id: selectedApplication.id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const rejectedApplication = allApplications.find(
+          (app) => app.id === selectedApplication.id
+        );
+        if (rejectedApplication) {
+          rejectedApplication.status = "Rejected";
+        }
+    } catch (error) {
         if (error.response && error.response.status === 400) {
+            // Handle 400 error
+        } else if (error.response && error.response.status === 401) {
+            // Handle 401 error
         }
-        else if (error.response && error.response.status === 401){
-        }
-      }
     }
+    await handleCloseModal();
+    await handleClose();
   };
   // maintain a list of 10 mui colour from their palette and assign them to the AppBar and Card components
   const navigate = useNavigate();
-  useEffect(()=>{
-    if(!localStorage.getItem('User')){
+  useEffect(() => {
+    if (!localStorage.getItem("User")) {
       navigate('/login')
+      // console.log("uncomment navigate to login");
     }
     const loadData = async () => {
-      const token = localStorage.getItem('User'); // assuming token is stored this way
+      const token = localStorage.getItem("User"); // assuming token is stored this way
       try {
-          const response = await axios.get('/mentor/applications', { headers: { Authorization: `Bearer ${token}` } });
-          setAllApplications(response.data)
+        const response = await axios.get("/mentor/applications", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setAllApplications(response.data);
       } catch (error) {
-          console.error('Error fetching profile data:', error);
+        console.error("Error fetching profile data:", error);
       }
     };
-    loadData()
-  },[])
+    loadData();
+  }, []);
 
   return (
     <Container>
@@ -112,7 +274,8 @@ const MentorDashboard = () => {
       </Typography>
 
       <List>
-        {allApplications.map((app, index) => (
+        {dummyApplications.map((app, index) => (
+          // {allApplications.map((app, index) => (
           <ListItem
             key={index}
             button
@@ -137,6 +300,9 @@ const MentorDashboard = () => {
             )}
             {app.status === "Rejected" && (
               <CancelIcon sx={{ color: "red", ml: 2 }} />
+            )}
+            {app.status === "Pending" && (
+              <PendingActionsIcon sx={{ color: "#ffc400", ml: 2 }} />
             )}
           </ListItem>
         ))}
@@ -288,7 +454,88 @@ const MentorDashboard = () => {
               sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
             >
               <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                <Button
+              <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+            >
+              <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                <Box>
+                  <Button variant="contained" onClick={() => setOpenModal('accept')} sx={{
+                    backgroundColor: "green",
+                    color: "white",
+                    display: "flex",
+                    alignItems: "center",
+                  }}>
+                    <CheckCircleIcon sx={{ mr: 1 }} /> Accept
+                  </Button>
+                  <Modal
+                    open={openModal === 'accept'}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={Modalstyle}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h6"
+                        component="h2"
+                      >
+                        Confirm Selection
+                      </Typography>
+                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Are you sure you wish to <strong>accept</strong> {selectedApplication.firstName}? The decision can be edited later.
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                        <Button onClick={() => handleFinalAccept(selectedApplication)} variant="contained">
+                          Confirm
+                        </Button>
+                        <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Modal>
+                </Box>
+
+                <Box>
+                  <Button variant="contained" onClick={() => setOpenModal('reject')} sx={{
+                    backgroundColor: "red",
+                    color: "white",
+                    display: "flex",
+                    alignItems: "center",
+                  }}>
+                    <CancelIcon sx={{ mr: 1 }} /> Reject
+                  </Button>
+                  <Modal
+                    open={openModal === 'reject'}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={Modalstyle}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h6"
+                        component="h2"
+                      >
+                        Confirm Rejection
+                      </Typography>
+                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Are you sure you wish to <strong>reject</strong> {selectedApplication.firstName}? The decision can be edited later.
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                        <Button onClick={() => handleFinalReject(selectedApplication)} variant="contained">
+                          Confirm
+                        </Button>
+                        <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Modal>
+                </Box>
+              </Box>
+            </Box>
+                {/* <Button
                   variant="contained"
                   onClick={() => handleAccept(selectedApplication)}
                   sx={{
@@ -299,8 +546,8 @@ const MentorDashboard = () => {
                   }}
                 >
                   <CheckCircleIcon sx={{ mr: 1 }} /> Accept
-                </Button>
-                <Button
+                </Button> */}
+                {/* <Button
                   variant="contained"
                   onClick={() => handleReject(selectedApplication)}
                   sx={{
@@ -311,7 +558,8 @@ const MentorDashboard = () => {
                   }}
                 >
                   <CancelIcon sx={{ mr: 1 }} /> Reject
-                </Button>
+                </Button> */}
+
               </Box>
             </Box>
           </Box>

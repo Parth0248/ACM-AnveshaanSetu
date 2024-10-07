@@ -10,6 +10,14 @@ import StaticProfilePage from './components/profilePage/index';
 import MentorEditProfilePage from './components/profilePage/mentorEditProfile';
 import MentorStaticProfilePage from './components/profilePage/mentorStaticProfile';
 import UserDashboard from './components/userDashboard';
+import UnauthorizedAccessPage from './components/errorPages/unauthorizedAccess';
+import ServerErrorPage from './components/errorPages/serverError';
+import AdminStaticProfilePage from './components/profilePage/adminStaticProfile';
+import AdminEditProfilePage from './components/profilePage/adminEditProfile';
+import AdminDashboard from './components/adminDashboard';
+import AddNewMentorPage from './components/addNewMentor';
+import ForgotPasswordPage from './components/forgotPassword';
+
 
 
 function App() {
@@ -26,6 +34,13 @@ function App() {
           <Route path="/editMentorProfile" element={<MentorEditProfilePage />} />
           <Route path="/mentorProfile" element={<MentorStaticProfilePage />} />
           <Route path="/myApplications" element={<UserDashboard />} />
+          <Route path="/unauthorized" element={<UnauthorizedAccessPage />} />
+          <Route path="/serverError" element={<ServerErrorPage />} /> 
+          <Route path="/adminProfile" element={<AdminStaticProfilePage />} />
+          <Route path="/editAdminProfile" element={<AdminEditProfilePage />} />
+          <Route path="/adminDashboard" element={<AdminDashboard />} />
+          <Route path="/addNewMentor" element={<AddNewMentorPage />} />
+          <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
         </Routes>
       </Router>
   );
