@@ -28,7 +28,7 @@ const AdminDashboard = () => {
     const handleTieBreaker = async (pref) => {
         const token = localStorage.getItem("User"); // assuming token is stored this way
         try {
-            const response = await axios.post("/admin/tie_breaker", {"preference" : pref, "Id":selectedApplication.id}, {
+            await axios.post("/admin/tie_breaker", {"preference" : pref, "Id":selectedApplication.id}, {
             headers: { Authorization: `Bearer ${token}` },
             });
             const currentApplication = allApplications.find(
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
                     currentApplication.pref1status='Accepted';
                     currentApplication.pref2status='Rejected';
                 }
-                else if(pref==2){
+                else if(pref===2){
                     currentApplication.pref1status='Rejected';
                     currentApplication.pref2status='Accepted';
                 }
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
     }, [])
     return (
         <Container>
-            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR']} />
+            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>All Applications</Typography>
             <List>
                 {allApplications.map((application) => (

@@ -57,7 +57,7 @@ const AddNewMentorPage = () => {
 
     return (
         <Container>
-            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR']}/>
+            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Add New Mentor</Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
                 <TextField

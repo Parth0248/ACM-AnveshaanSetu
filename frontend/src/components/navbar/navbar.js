@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 
 function ResponsiveAppBar({ pages }) {
   const settings = ["Profile", "Logout"];
-  var pages = pages;
   var isLoggedIn = true; // TODO: Remove this and replace it with Logic
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -30,7 +29,6 @@ function ResponsiveAppBar({ pages }) {
   };
 
   const handleCloseNavMenu = (page) => {
-    console.log(page)
     if (page === "APPLICATIONS") {
       if (localStorage.getItem("type") === "mentor") {
         window.location.href = "/mentorDashboard";
@@ -41,6 +39,11 @@ function ResponsiveAppBar({ pages }) {
       }
     } else if (page === "ADD MENTOR") {
       window.location.href = "/addNewMentor";
+    }
+    else if(page=== "ALL USERS"){
+      if (localStorage.getItem("type") === "admin") {
+        window.location.href = "/allUsers";
+      }
     }
 
     setAnchorElNav(null);

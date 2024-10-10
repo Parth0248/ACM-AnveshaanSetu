@@ -1,29 +1,11 @@
 // export default HomePage;
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Container, Button, Card, CardContent, Grid, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ResponsiveAppBar from '../navbar/navbar'; // Assuming this is your Navbar component
 import {  Link } from 'react-router-dom';
 import { useNavigate } from 'react-router'
-
-
-
-// Hero Section Component
-const HeroSection = () => (
-    <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 4, borderRadius: 3, mt: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <Typography variant="h3" component="h1" gutterBottom>
-            ACM India Anveshan Setu Fellowship
-        </Typography>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-            Bridging the gap between aspiring researchers and established mentors.
-        </Typography>
-        {localStorage.getItem('type') ==='user' &&(
-        <Button component={Link} to="/apply" variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
-            Apply Now
-        </Button>
-        )}
-    </Box>
-);
+import axios from "axios";
 
 // About Section
 const AboutSection = () => (
@@ -65,7 +47,7 @@ const EligibilitySection = () => (
         </Typography>
         <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-                <Card>
+                <Card sx={{ height: '100%' }}>
                     <CardContent>
                         <Typography variant="h6">Eligibility for Students</Typography>
                         <Typography variant="body1">
@@ -75,7 +57,7 @@ const EligibilitySection = () => (
                 </Card>
             </Grid>
             <Grid item xs={12} md={6}>
-                <Card>
+                <Card sx={{ height: '100%' }}>
                     <CardContent>
                         <Typography variant="h6">Eligibility for Mentors</Typography>
                         <Typography variant="body1">
@@ -232,10 +214,30 @@ const FooterSection = () => (
 
 const HomePage = () => {
     const navigate = useNavigate();
-
+    const [alreadyApplied, setalreadyApplied] = useState(false)
     React.useEffect(()=>{
         if(!localStorage.getItem('User')){
             navigate('/login')
+        }
+        if(localStorage.getItem('type')==='mentee'){
+            const loadData = async () => {
+                const token = localStorage.getItem("User"); // assuming token is stored this way
+                try {
+                  const response = await axios.get("/mentee/check_applied", {
+                    headers: { Authorization: `Bearer ${token}` },
+                  });
+                  setalreadyApplied(response.data)
+                } catch (error) {
+                  console.error("Error fetching profile data:", error);
+                  if(error.response.status === 500){
+                    navigate("/serverError");
+                }
+                else if(error.response.status === 401){
+                    navigate("/unauthorized");
+                }
+                }
+            }
+            loadData();
         }
     })
     return (
@@ -245,7 +247,24 @@ const HomePage = () => {
 
             {/* Hero Section */}
             {/* <HeroSection handleApplyClick={handleApplyClick()} /> */}
-            <HeroSection />
+            <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 4, borderRadius: 3, mt: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h3" component="h1" gutterBottom>
+                    ACM India Anveshan Setu Fellowship
+                </Typography>
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                    Bridging the gap between aspiring researchers and established mentors.
+                </Typography>
+                {localStorage.getItem('type') ==='mentee' && !alreadyApplied &&(
+                <Button component={Link} variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
+                    Apply Now
+                </Button>
+                )}
+                {localStorage.getItem('type') ==='mentee' && alreadyApplied &&(
+                <Button component={Link} variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
+                    Alread Applied
+                </Button>
+                )}
+            </Box>
 
             {/* Content Sections */}
             <AboutSection />

@@ -18,40 +18,36 @@ const AdminStaticProfilePage = () => {
         window.location.href = '/editAdminProfile';
     };
 
-  //   useEffect(()=>{
-  //     if(!localStorage.getItem('User')){
-  //         navigate('/login')
-  //     }
-  //     const loadData = async ()=>{
-  //         const token = localStorage.getItem('User'); // assuming token is stored this way
-  //         try {
-  //             const response = await axios.get('/mentee/profile', { headers: { Authorization: `Bearer ${token}` } });
-  //             var user = response.data;
-  //             setProfile({
-  //                 'firstName' : user['FirstName'],
-  //                 'lastName' : user['LastName'],
-  //                 'email' : user['Email'],
-  //                 'affiliation' : user['Affiliation'],
-  //                 'mobileNumber' : user['MobileNumber'],
-  //                 'gender' : user['Gender'],
-  //                 'phdRegistration' : user['PHDRegistration'],
-  //                 'yearOfPhd' : user['PHDYear'],
-  //             });
-  //         } catch (error) {
-  //             if(error.response.status === 500){
-  //                 navigate("/serverError")
-  //             }
-  //             else if(error.response.status === 401){
-  //                 navigate("/unauthorized")
-  //             }
-  //         }
-  //     }
-  //     loadData()
-  // },[])
+    useEffect(()=>{
+        if(!localStorage.getItem('User')){
+          navigate('/login')
+        }
+        const loadData = async ()=>{
+          const token = localStorage.getItem('User'); // assuming token is stored this way
+          try {
+              const response = await axios.get('/admin/profile', { headers: { Authorization: `Bearer ${token}` } });
+              var user = response.data;
+              setProfile({
+                  'firstName' : user['FirstName'],
+                  'lastName' : user['LastName'],
+                  'email' : user['Email'],
+                  'affiliation' : user['Affiliation'],
+              });
+          } catch (error) {
+            if(error.response.status === 500){
+              navigate("/serverError")
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized")
+            }
+          }
+      }
+      loadData()
+      },[])
 
     return (
         <Container>
-            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR']}/>
+            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
             <Typography variant="h4" sx={{ mt: 4, mb: 2, fontWeight: 'bold' }}>Admin Profile</Typography>
             <Paper elevation={4} sx={{ p: 3, mt: 2, backgroundColor: '#f7f7f7', borderRadius: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>

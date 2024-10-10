@@ -66,7 +66,7 @@ const AdminEditProfilePage = () => {
 
     return (
         <Container>
-            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR']}/>
+            <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
             <Typography variant="h4" sx={{ mt: 4, mb: 2, fontWeight: 'bold' }}>Edit Admin Profile</Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
                 <TextField fullWidth label="Email" name="email" value={profile.email} onChange={handleChange} sx={{ mb: 2 }} />
