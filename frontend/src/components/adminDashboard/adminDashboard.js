@@ -125,9 +125,17 @@ const AdminDashboard = () => {
                         <Typography gutterBottom>Year of PhD: {selectedApplication.yearOfPhD}</Typography>
                         <Typography gutterBottom>Affiliation: {selectedApplication.affiliation}</Typography>
                         <Typography gutterBottom>Research Problem: {selectedApplication.researchProblem}</Typography>
-                        <Typography gutterBottom>1st Preference: {selectedApplication.firstPreference} - {selectedApplication.pref1status === "Accepted" ? <CheckCircleIcon color="success" /> : selectedApplication.pref1status === "Rejected" ? <CancelIcon color="error" /> : <PendingActionsIcon sx={{ color: "#ffc400" }} />}
+                        <Typography gutterBottom display="flex" alignItems="center" sx={{ mb: 1 }}>
+                            1st Preference: {selectedApplication.firstPreference} - 
+                            {selectedApplication.pref1status === "Accepted" ? <CheckCircleIcon color="success" sx={{ ml: 1 }} /> : 
+                             selectedApplication.pref1status === "Rejected" ? <CancelIcon color="error" sx={{ ml: 1 }} /> : 
+                             <PendingActionsIcon sx={{ color: "#ffc400", ml: 1 }} />}
                         </Typography>
-                        <Typography gutterBottom>2nd Preference: {selectedApplication.secondPreference} - {selectedApplication.pref2status === "Accepted" ? <CheckCircleIcon color="success" /> : selectedApplication.pref2status === "Rejected" ? <CancelIcon color="error" /> : <PendingActionsIcon sx={{ color: "#ffc400"}}/>}
+                        <Typography gutterBottom display="flex" alignItems="center" sx={{ mb: 2 }}>
+                            2nd Preference: {selectedApplication.secondPreference} - 
+                            {selectedApplication.pref2status === "Accepted" ? <CheckCircleIcon color="success" sx={{ ml: 1 }} /> : 
+                             selectedApplication.pref2status === "Rejected" ? <CancelIcon color="error" sx={{ ml: 1 }} /> : 
+                             <PendingActionsIcon sx={{ color: "#ffc400", ml: 1 }} />}
                         </Typography>
                         {selectedApplication.pref1status === "Accepted" && selectedApplication.pref2status === "Accepted" && (
                             <div>

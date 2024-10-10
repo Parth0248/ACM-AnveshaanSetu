@@ -3,6 +3,7 @@ import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import ResponsiveAppBar from '../navbar/navbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import MenuItem from '@mui/material/MenuItem';
 
 const AddNewMentorPage = () => {
     const [mentor, setMentor] = useState({
@@ -10,7 +11,8 @@ const AddNewMentorPage = () => {
         lastName: '',
         affiliation: '',
         email: '',
-        researchAreas: ''
+        researchAreas: '',
+        access: ''
     });
 
     const handleChange = (event) => {
@@ -32,7 +34,8 @@ const AddNewMentorPage = () => {
                     lastName: '',
                     affiliation: '',
                     email: '',
-                    researchAreas: ''
+                    researchAreas: '',
+                    access: ''
                 })
             }
         } catch (error) {
@@ -103,6 +106,19 @@ const AddNewMentorPage = () => {
                     required
                     sx={{ mb: 2 }}
                 />
+                <TextField
+                    fullWidth
+                    select
+                    label="Access"
+                    name="access"
+                    value={mentor.access}
+                    onChange={handleChange}
+                    required
+                    sx={{ mb: 2 }}
+                >
+                    <MenuItem value="Mentor">Mentor</MenuItem>
+                    <MenuItem value="Admin">Admin</MenuItem>
+                </TextField>
                 <Button type="submit" variant="contained" color="primary">Submit</Button>
             </Box>
         </Container>

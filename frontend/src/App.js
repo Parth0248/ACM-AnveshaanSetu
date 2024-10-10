@@ -17,8 +17,7 @@ import AdminEditProfilePage from './components/profilePage/adminEditProfile';
 import AdminDashboard from './components/adminDashboard';
 import AddNewMentorPage from './components/addNewMentor';
 import ForgotPasswordPage from './components/forgotPassword';
-
-
+import AllUsersPage from './components/masterPage/masterPage';
 
 function App() {
   return (
@@ -41,6 +40,7 @@ function App() {
           <Route path="/adminDashboard" element={<AdminDashboard />} />
           <Route path="/addNewMentor" element={<AddNewMentorPage />} />
           <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
+          <Route path="/allUsers" element={<AllUsersPage />} />
         </Routes>
       </Router>
   );
