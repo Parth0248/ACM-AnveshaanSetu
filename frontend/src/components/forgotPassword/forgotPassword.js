@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
-import ResponsiveAppBar from '../navbar/navbar';
 
 const ForgotPasswordPage = () => {
     const [user, setUser] = useState({
@@ -22,8 +21,8 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <Container>
-            {/* <ResponsiveAppBar /> */}
+        <Container component="main" maxWidth="lg" sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'top', minHeight: '100vh' }}>
+            <Box sx={{alignItems: 'center', width : '70%' }}>
             <Typography variant="h3" sx={{ mt: 4 }}>ACM India Anveshan Setu Fellowship</Typography>
             <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Forgot Password</Typography>
             <Box component="form" onSubmit={handleRecover} sx={{ mt: 4 }}>
@@ -56,6 +55,7 @@ const ForgotPasswordPage = () => {
                     sx={{ mb: 2 }}
                 />
                 <Button type="submit" variant="contained" color="primary">Recover</Button>
+            </Box>
             </Box>
         </Container>
     );

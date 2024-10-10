@@ -1,6 +1,6 @@
 // export default HomePage;
 import React from 'react';
-import { Box, Typography, Container, Button, Card, CardContent, Grid, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText, Divider } from '@mui/material';
+import { Box, Typography, Container, Button, Card, CardContent, Grid, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ResponsiveAppBar from '../navbar/navbar'; // Assuming this is your Navbar component
 import {  Link } from 'react-router-dom';
@@ -235,14 +235,13 @@ const HomePage = () => {
 
     React.useEffect(()=>{
         if(!localStorage.getItem('User')){
-            // navigate('/login')
-            console.log('Uncomment navigate to login')
+            navigate('/login')
         }
     })
     return (
         <Container>
             {/* NavBar */}
-            <ResponsiveAppBar />
+            <ResponsiveAppBar pages={['APPLICATIONS']}/>
 
             {/* Hero Section */}
             {/* <HeroSection handleApplyClick={handleApplyClick()} /> */}

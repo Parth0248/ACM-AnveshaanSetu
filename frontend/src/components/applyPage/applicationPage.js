@@ -55,11 +55,16 @@ const ApplicationPage = () => {
     try {
       const response = await axios.get("/mentee/get-mentors")
       setFacultyOptions(response.data)
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+        if(error.response.status === 500){
+          navigate("/serverError")
+      }
+      else if(error.response.status === 401){
+          navigate("/unauthorized")
+      }
     }
   };
-
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('User');
@@ -75,12 +80,19 @@ const ApplicationPage = () => {
           headers: {"Authorization": `Bearer ${token}`},
         }
       );
+      navigate("/myApplications")
     } catch (error) {
       console.error("Submission error", error);
+      if(error.response.status === 500){
+        navigate("/serverError")
+    }
+    else if(error.response.status === 401){
+        navigate("/unauthorized")
+    }
     }
   };
 
-  const navigate = useNavigate();
+  
 
   React.useEffect(()=>{
       if(!localStorage.getItem('User')){
@@ -91,7 +103,7 @@ const ApplicationPage = () => {
 
   return (
     <Container>
-      <ResponsiveAppBar />
+      <ResponsiveAppBar pages={['APPLICATIONS']}/>
       <Box sx={{ mt: 4, paddingBottom: 2 }}>
         <Typography variant="h4" gutterBottom>
           Application Form

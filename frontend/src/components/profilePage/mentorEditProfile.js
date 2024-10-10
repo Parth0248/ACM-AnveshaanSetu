@@ -21,12 +21,16 @@ const MentorEditProfilePage = () => {
         event.preventDefault();
         const token = localStorage.getItem('User');
         try {
-            console.log(profile)
             await axios.post('/mentor/edit_profile', profile, { headers: { Authorization: `Bearer ${token}` } });
             alert('Profile updated successfully!');
             navigate('/mentorProfile')
         } catch (error) {
-            console.error('Error updating profile:', error);
+            if(error.response.status === 500){
+                navigate("/serverError")
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized")
+            }
         }
     };
 
@@ -46,7 +50,12 @@ const MentorEditProfilePage = () => {
                         mobileNumber: user['MobileNumber'] || ''
                 });
             } catch (error) {
-                console.error('Error fetching profile data:', error);
+                if(error.response.status === 500){
+                    navigate("/serverError")
+                }
+                else if(error.response.status === 401){
+                    navigate("/unauthorized")
+                }
             }
         };
         loadData();
@@ -54,7 +63,7 @@ const MentorEditProfilePage = () => {
 
     return (
         <Container>
-            <ResponsiveAppBar />
+            <ResponsiveAppBar pages={['APPLICATIONS']}/>
             <Typography variant="h4" sx={{ mt: 4, mb: 2, fontWeight: 'bold' }}>Edit Mentor Profile</Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
                 <Grid container spacing={2}>

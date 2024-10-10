@@ -42,7 +42,12 @@ const ProfilePage = () => {
                     'acmMailingList' : user['AddToMailingList']
                 });
             } catch (error) {
-                console.error('Error fetching profile data:', error);
+                if(error.response.status === 500){
+                    navigate("/serverError")
+                }
+                else if(error.response.status === 401){
+                    navigate("/unauthorized")
+                }
             }
         };
         loadData();
@@ -77,7 +82,7 @@ const ProfilePage = () => {
 
     return (
         <Container>
-            <ResponsiveAppBar />
+            <ResponsiveAppBar pages={['APPLICATIONS']}/>
             <Box component="form" sx={{ mt: 4, paddingBottom: 2 }}>
                 <Typography variant="h4">Profile</Typography>
                 <TextField

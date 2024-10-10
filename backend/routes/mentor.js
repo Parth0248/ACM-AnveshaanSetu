@@ -78,7 +78,7 @@ router.use("/acceptApplication", protectMentor, async(req, res)=>{
                 query = `UPDATE Applications SET firstPreferenceStatus='Accepted' where Id=${appId}`
                 await connection.execute(query)
             }
-            else{
+            if(results[0]['secondPreference']===req.user){
                 query = `UPDATE Applications SET secondPreferenceStatus='Accepted' where Id=${appId}`
                 await connection.execute(query)
             }
@@ -108,7 +108,7 @@ router.use("/rejectApplication", protectMentor, async(req, res)=>{
                 query = `UPDATE Applications SET firstPreferenceStatus='Rejected' where Id=${appId}`
                 await connection.execute(query)
             }
-            else{
+            if(results[0]['secondPreference']===req.user){
                 query = `UPDATE Applications SET secondPreferenceStatus='Rejected' where Id=${appId}`
                 await connection.execute(query)
             }
@@ -187,9 +187,9 @@ router.get("/applications", protectMentor, async (req, res)=>{
                     secondPreference:`${ele.SecondMentorFirstName} ${ele.SecondMentorLastName}`,
                     references:ele.references_text,
                     goals:ele.goals,
-                    cv:ele.cv.replace("../uploads",""),
-                    statementOfPurpose:ele.statementOfPurpose.replace("../uploads",""),
-                    consentLetter:ele.consentLetter.replace("../uploads",""),
+                    cv:ele.cv.replace("../uploads/",""),
+                    statementOfPurpose:ele.statementOfPurpose.replace("../uploads/",""),
+                    consentLetter:ele.consentLetter.replace("../uploads/",""),
                     researchProblem:ele.researchProblem,
                     specificActivities:ele.specificActivities,
                     advisorName:ele.advisorName,

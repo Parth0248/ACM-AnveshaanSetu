@@ -31,7 +31,7 @@ const LoginPage = () => {
           justifyContent: 'center', // Center horizontally
           alignItems: 'center', // Center vertically
           marginBottom: 2, // Space below the title
-          marginTop: 8, // Space above the
+          marginTop: 7, // Space above the
         }}
       >
         <Typography variant="h3" align="center">ACM India Anveshan Setu Fellowship</Typography>
@@ -46,7 +46,7 @@ const LoginPage = () => {
           borderRadius: '8px',
           padding: '16px',
           width: '50%',
-          marginTop: 8,
+          marginTop: 7,
           boxShadow: 4, // Add shadow
         }}
       >
@@ -56,7 +56,7 @@ const LoginPage = () => {
         <LoginForm credentials={credentials} handleChange={handleChange} handleSubmit={(e)=>{e.preventDefault(); handleSubmit(credentials, navigate, setError)}} error={error} />
         <img src={googleLogo} alt="Google Logo" onClick={google} style={{ cursor: 'pointer' }}/>
       </Box>
-      <Typography variant="body2" sx={{ mt: 2 }}>Don't have an account? <a href="/signup">Sign Up</a></Typography>
+      <Typography variant="body2" sx={{ mt: 3 }}>Don't have an account? <a href="/signup">Sign Up</a></Typography>
       <Typography variant="body2" sx={{ mt: 2 }}>Forgot Password? <a href="/forgotPassword">Recover</a></Typography>
     </Container>
   );
