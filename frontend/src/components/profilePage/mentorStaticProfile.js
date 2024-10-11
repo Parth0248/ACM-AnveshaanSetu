@@ -20,8 +20,7 @@ const MentorStaticProfilePage = () => {
     const handleEditClick = () => {
         window.location.href = '/editMentorProfile';
     };
-
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     useEffect(()=>{
         if(!localStorage.getItem('User')){
             navigate('/login')
@@ -29,7 +28,7 @@ const MentorStaticProfilePage = () => {
         const loadData = async ()=>{
             const token = localStorage.getItem('User'); // assuming token is stored this way
             try {
-                const response = await axios.get('/mentee/profile', { headers: { Authorization: `Bearer ${token}` } });
+                const response = await axios.get('/mentor/profile', { headers: { Authorization: `Bearer ${token}` } });
                 var user = response.data;
                 setProfile({
                     'firstName' : user['FirstName'],
@@ -37,9 +36,7 @@ const MentorStaticProfilePage = () => {
                     'email' : user['Email'],
                     'affiliation' : user['Affiliation'],
                     'mobileNumber' : user['MobileNumber'],
-                    'gender' : user['Gender'],
-                    'phdRegistration' : user['PHDRegistration'],
-                    'yearOfPhd' : user['PHDYear'],
+                    'areasOfExpertise' : user['ResearchAreas']
                 });
             } catch (error) {
                 if(error.response.status === 500){
@@ -52,6 +49,7 @@ const MentorStaticProfilePage = () => {
         }
         loadData()
     },[])
+
     return (
         <Container>
             <ResponsiveAppBar pages={['APPLICATIONS']}/>

@@ -31,6 +31,34 @@ router.get("/profile", protectAdmin, async (req, res) => {
     }
 })
 
+router.get("/get_all_users", protectAdmin, async (req, res)=>{
+    const connection = await db();
+    try{
+        var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation, PHDYear as phdYear from users`;
+        var [users] = await connection.execute(query);
+
+        var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation from Mentor`;
+        var [mentors] = await connection.execute(query);
+
+        var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation from ADMIN`;
+        var [admins] = await connection.execute(query);
+
+        return res.status(200).json({"user":users,
+            "mentor":mentors,
+            "admin":admins
+        });
+    }
+    catch(e){
+        console.error('Error during login:', e);
+        res.status(500).send('Server error');
+    }finally {
+        if (connection) {
+            await connection.end();
+            console.log('Database connection closed');
+        }
+    }
+})
+
 router.get("/edit_profile", protectAdmin, async (req, res) => {
     const connection = await db();
     try{
@@ -172,10 +200,18 @@ router.post("/add_mentor", protectAdmin, async(req, res)=>{
         const password = `#${req.body['firstName']}${req.body['lastName']}${req.body['affiliation']}`
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password.toString(), salt);
-        const [results] = await connection.query(
-            'Insert Into Mentor (FirstName, LastName, Affiliation, Email, ResearchAreas, Password) values(?, ?, ?, ?, ?, ?)',
-             [req.body['firstName'], req.body['lastName'], req.body['affiliation'], req.body['email'], req.body['researchAreas'], hash]
-        );
+        if(req.body['access']==='Mentor'){
+            const [results] = await connection.query(
+                'Insert Into Mentor (FirstName, LastName, Affiliation, Email, ResearchAreas, Password) values(?, ?, ?, ?, ?, ?)',
+                [req.body['firstName'], req.body['lastName'], req.body['affiliation'], req.body['email'], req.body['researchAreas'], hash]
+            );
+        }
+        else{
+            const [results] = await connection.query(
+                'Insert Into Admin (FirstName, LastName, Affiliation, Email, Research_Areas, Password) values(?, ?, ?, ?, ?, ?)',
+                [req.body['firstName'], req.body['lastName'], req.body['affiliation'], req.body['email'], req.body['researchAreas'], hash]
+            );
+        }
         return res.status(200).send('Added Mentor Successfully');
     }
     catch(e){

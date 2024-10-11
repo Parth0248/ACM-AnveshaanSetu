@@ -28,6 +28,31 @@ router.get("/profile", protectMentee, async (req, res) => {
     }
 })
 
+router.get("/check_applied", protectMentee, async(req,res)=>{
+    const connection = await db();
+    try{
+        const query = `SELECT COUNT(*) as count from Applications where Mentee_Id='${req.user}'`
+        const [results] = await connection.execute(query)
+        if(results?.length>0){
+            if(results[0]['count']>0){
+                return res.status(200).send(true);
+            }
+            else{
+                return res.status(200).send(false);
+            }
+        }
+    }
+    catch(e){
+        console.error('Error during login:', e);
+        return res.status(500).send('Server error');
+    }finally {
+        if (connection) {
+            await connection.end();
+            console.log('Database connection closed');
+        }
+    }
+})
+
 router.post("/profile", protectMentee, async (req, res) => {
     const connection = await db();
     try{

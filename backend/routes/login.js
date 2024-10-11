@@ -20,7 +20,9 @@ router.use("/login", async (req, res) => {
         var [results, fields] = await connection.execute(login_admin);
 
         if(results?.length > 0){
-            if(password.localeCompare(results[0].Password) == 0){
+            let flag = await bcrypt.compare(password, results[0].Password)
+
+            if(flag){
                 return res.status(200).json({
                     type: "admin",
                     token: generateToken(email),
