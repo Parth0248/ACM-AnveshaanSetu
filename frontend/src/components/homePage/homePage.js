@@ -211,6 +211,7 @@ const FooterSection = () => (
         </Typography>
     </Box>
 );
+var pages = ['APPLICATIONS'];
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -243,7 +244,7 @@ const HomePage = () => {
     return (
         <Container>
             {/* NavBar */}
-            <ResponsiveAppBar pages={['APPLICATIONS']}/>
+            <ResponsiveAppBar pages={localStorage.getItem('type')==='admin'? ['APPLICATIONS', 'ADD MENTOR', 'ALL USERS'] : ['APPLICATIONS']}/>
 
             {/* Hero Section */}
             {/* <HeroSection handleApplyClick={handleApplyClick()} /> */}
@@ -255,7 +256,7 @@ const HomePage = () => {
                     Bridging the gap between aspiring researchers and established mentors.
                 </Typography>
                 {localStorage.getItem('type') ==='mentee' && !alreadyApplied &&(
-                <Button component={Link} variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
+                <Button component={Link} to="/apply" variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
                     Apply Now
                 </Button>
                 )}

@@ -17,6 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ResponsiveAppBar from "../navbar/navbar";
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import { useNavigate } from 'react-router';
 
 const UserDashboard = () => {
@@ -111,17 +112,19 @@ const UserDashboard = () => {
               </Typography>
               {selectedApplication.firstPreferenceStatus === "Accepted" ? (
                 <CheckCircleIcon color="success" />
-              ) : (
+              ) : selectedApplication.firstPreferenceStatus === "Rejected" ?(
                 <CancelIcon color="error" />
-              )}
+              ):<PendingActionsIcon sx={{ color: "#ffc400", ml: 1 }} />
+              }
               <Typography>
                 2nd Preference: {selectedApplication.secondPreference}
               </Typography>
               {selectedApplication.secondPreferenceStatus === "Accepted" ? (
                 <CheckCircleIcon color="success" />
-              ) : (
+              ) : selectedApplication.secondPreferenceStatus === "Rejected" ?(
                 <CancelIcon color="error" />
-              )}
+              ):<PendingActionsIcon sx={{ color: "#ffc400", ml: 1 }} />
+              }
             </Box>
           </Box>
         )}

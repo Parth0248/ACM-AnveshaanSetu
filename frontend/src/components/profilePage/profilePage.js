@@ -70,7 +70,7 @@ const ProfilePage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('User');
         try {
             await axios.post('/mentee/profile', profile, { headers: { Authorization: `Bearer ${token}` } });
             alert('Profile updated successfully!');

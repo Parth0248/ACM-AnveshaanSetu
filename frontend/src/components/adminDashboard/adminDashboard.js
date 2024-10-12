@@ -56,6 +56,10 @@ const AdminDashboard = () => {
         handleClose();
     }
 
+    const handleDownload = ()=>{
+        
+    }
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -86,7 +90,8 @@ const AdminDashboard = () => {
     return (
         <Container>
             <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
-            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>All Applications</Typography>
+            <Typography variant="h4" sx={{ mt: 4, mb: 1 }}>All Applications</Typography>
+            <Button type="submit" variant="contained" color="primary" sx={{ mb: 1 }} onClick={handleDownload}>Export Applications</Button>
             <List>
                 {allApplications.map((application) => (
                     <ListItem key={application.id} button onClick={() => handleOpen(application)} sx={{ boxShadow: 3, borderRadius: 2, mb: 2 , cursor: 'pointer'}}>
@@ -102,6 +107,7 @@ const AdminDashboard = () => {
                 </ListItem>
                 ))}
             </List>
+            
             {selectedApplication && (
                 <Dialog 
                 open={open}

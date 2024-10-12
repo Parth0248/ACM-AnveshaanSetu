@@ -70,6 +70,57 @@ const AllUsersPage = () => {
         setSearchResult({ found: found, message: found ? '' : 'No matches found.' });
     };
 
+    const filterUser=()=>{
+        if(!searchQuery){
+            return allUsers;
+        }
+
+        return allUsers.filter(person =>{
+            if (
+                person.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                person.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                person.affiliation.toLowerCase().includes(searchQuery.toLowerCase())
+            ){
+                return true;
+            }
+            return false
+        })
+    }
+
+    const filterMentor=()=>{
+        if(!searchQuery){
+            return allMentors;
+        }
+
+        return allMentors.filter(person =>{
+            if (
+                person.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                person.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                person.affiliation.toLowerCase().includes(searchQuery.toLowerCase())
+            ){
+                return true;
+            }
+            return false
+        })
+    }
+
+    const filterAdmin=()=>{
+        if(!searchQuery){
+            return allUsers;
+        }
+
+        return allAdmins.filter(person =>{
+            if (
+                person.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                person.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                person.affiliation.toLowerCase().includes(searchQuery.toLowerCase())
+            ){
+                return true;
+            }
+            return false
+        })
+    }
+
     return (
         <Container>
             <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
@@ -89,7 +140,7 @@ const AllUsersPage = () => {
             <Box>
                 <Typography variant="h5" sx={{ mt: 2 }}>Users</Typography>
                 <List>
-                    {allUsers.map((user) => (
+                    {filterUser().map((user) => (
                         <ListItem key={user.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
                             <Button onClick={() => handleDelete(user.id, 'users')} color="error">Delete</Button>
                         }>
@@ -99,17 +150,17 @@ const AllUsersPage = () => {
                 </List>
                 <Typography variant="h5" sx={{ mt: 2 }}>Mentors</Typography>
                 <List>
-                    {allMentors.map((mentor) => (
+                    {filterMentor().map((mentor) => (
                         <ListItem key={mentor.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
                             <Button onClick={() => handleDelete(mentor.id, 'mentors')} color="error">Delete</Button>
                         }>
-                            <ListItemText primary={`${mentor.firstName} ${mentor.lastName}`} secondary={`Affiliation: ${mentor.affiliation}`} />
+                            <ListItemText primary={`${mentor.firstName} ${mentor.lastName}`} secondary={`Affiliation: ${mentor.affiliation}, Accepted Applications: ${mentor.accepted}, Rejected Applications: ${mentor.rejected}`} />
                         </ListItem>
                     ))}
                 </List>
                 <Typography variant="h5" sx={{ mt: 2 }}>Admins</Typography>
                 <List>
-                    {allAdmins.map((admin) => (
+                    {filterAdmin().map((admin) => (
                         <ListItem key={admin.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
                             <Button onClick={() => handleDelete(admin.id, 'admins')} color="error">Delete</Button>
                         }>

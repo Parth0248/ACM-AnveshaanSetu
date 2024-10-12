@@ -3,6 +3,10 @@ const jwt = require('jsonwebtoken');
 var db = require("../config/setUpDB.js");
 const bcrypt = require('bcryptjs');
 const { protectAdmin } = require("../middleware/usermiddleware")
+const {adminUpload} = require("../config/setUpMulter.js");
+const fs = require('fs');
+const fastcsv = require('fast-csv');
+
 router = express.Router()
 module.exports = router;
 
@@ -34,7 +38,7 @@ router.get("/profile", protectAdmin, async (req, res) => {
 router.get("/get_all_users", protectAdmin, async (req, res)=>{
     const connection = await db();
     try{
-        var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation, PHDYear as phdYear from users`;
+        var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation, PHDYear as phdYear, Email as email from users`;
         var [users] = await connection.execute(query);
 
         var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation from Mentor`;
@@ -222,5 +226,42 @@ router.post("/add_mentor", protectAdmin, async(req, res)=>{
             await connection.end();
             console.log('Database connection closed');
         }
+    }
+})
+
+router.post("/add_mentor_csv", adminUpload, async (req, res)=>{
+    const connection = await db();
+    try{
+        const path = req.files.csv[0].path
+        const results = []
+        fs.createReadStream(path)
+            .pipe(fastcsv.parse({ headers: true }))
+            .on('data', (data) => results.push(data))
+            .on('end', async () => {
+                const values=[]
+                var query = `Insert Into Mentor (FirstName, LastName, Affiliation, Email, ResearchAreas, Password) values `;
+                for(const row of results){
+                    const password = `#${row.firstName}${row.lastName}${row.affiliation}`
+                    const salt = await bcrypt.genSalt(10);
+                    const hash = await bcrypt.hash(password.toString(), salt);
+                    values.push(`('${row.firstName}', '${row.lastName}', '${row.affiliation}', '${row.email}', '${row.researchAreas}', '${hash}')`)
+                }
+                console.log(values)
+                query += values.join(", ")
+                await connection.execute(query);
+                if (connection) {
+                    await connection.end();
+                    console.log('Database connection closed');
+                }
+        });
+        return res.status(200).send('Added Mentors Successfully');
+    }
+    catch(e){
+        console.error('Error during login:', e);
+        if (connection) {
+            await connection.end();
+            console.log('Database connection closed');
+        }
+        return res.status(500).send('Server error');
     }
 })

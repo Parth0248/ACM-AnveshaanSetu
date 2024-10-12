@@ -77,7 +77,7 @@ router.use("/submit-application", menteeUpload, async (req, res) => {
         const body = req.body;
         const [results] = await connection.query(
             'INSERT INTO Applications(Mentee_ID, justification, researchProblem, coursework, researchExperience, onlineCourses, firstPreference, secondPreference, references_text, goals, cv, statementOfPurpose, consentLetter, specificActivities, advisorName, advisorEmail, coAdvisorName, coAdvisorEmail, agree) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-            [req.user, body['justification'], body['researchProblem'], body['coursework'], body['researchExperience'], body['onlineCourses'], body['firstPreference'], body['secondPreference'], body['references_text'], body['goals'], req.files.cv[0].path, req.files.statementOfPurpose[0].path, req.files.consentLetter[0].path, body['specificActivities'], body['advisorName'], body['advisorEmail'], body['coAdvisorName'], body['coAdvisorEmail'], body['agree']]
+            [req.user, body['justification'], body['researchProblem'], body['coursework'], body['researchExperience'], body['onlineCourses'], body['firstPreference'], body['secondPreference'], body['references'], body['goals'], req.files.cv[0].path, req.files.statementOfPurpose[0].path, req.files.consentLetter[0].path, body['specificActivities'], body['advisorName'], body['advisorEmail'], body['coAdvisorName'], body['coAdvisorEmail'], body['agree']]
         )
         return res.status(200).json("APllication SuccessFully Submitted");
     }
