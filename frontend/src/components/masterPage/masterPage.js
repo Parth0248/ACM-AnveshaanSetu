@@ -154,7 +154,7 @@ const AllUsersPage = () => {
                         <ListItem key={mentor.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
                             <Button onClick={() => handleDelete(mentor.id, 'mentors')} color="error">Delete</Button>
                         }>
-                            <ListItemText primary={`${mentor.firstName} ${mentor.lastName}`} secondary={`Affiliation: ${mentor.affiliation}, Accepted Applications: ${mentor.accepted}, Rejected Applications: ${mentor.rejected}`} />
+                            <ListItemText primary={`${mentor.firstName} ${mentor.lastName}`} secondary={`Affiliation: ${mentor.affiliation}, Accepted Applications: ${mentor.acceptedApplications}, Rejected Applications: ${mentor.rejectedApplications}`} />
                         </ListItem>
                     ))}
                 </List>

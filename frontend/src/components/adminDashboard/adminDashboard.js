@@ -56,8 +56,35 @@ const AdminDashboard = () => {
         handleClose();
     }
 
-    const handleDownload = ()=>{
-        
+    const handleDownload = async ()=>{
+        const token = localStorage.getItem("User");
+        try {
+            const response = await axios.get("/admin/download_zip", {
+                headers: { Authorization: `Bearer ${token}` },
+              responseType: 'blob',
+            });
+      
+            const blob = new Blob([response.data], { type: 'application/zip' });
+            const downloadUrl = window.URL.createObjectURL(blob);
+      
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = 'exported-file.zip';
+      
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+        } 
+        catch (error) {
+            console.error('Error exporting the ZIP file:', error);
+            if(error.response.status === 500){
+                navigate("/serverError");
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized");
+            }
+        }
     }
 
     const handleClose = () => {
@@ -79,10 +106,10 @@ const AdminDashboard = () => {
               console.error("Error fetching profile data:", error);
               if(error.response.status === 500){
                 navigate("/serverError");
-            }
-            else if(error.response.status === 401){
+                }
+                else if(error.response.status === 401){
                 navigate("/unauthorized");
-            }
+                }
             }
         }
         loadData();

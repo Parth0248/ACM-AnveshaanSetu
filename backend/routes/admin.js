@@ -1,5 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const archiver = require('archiver');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 var db = require("../config/setUpDB.js");
 const bcrypt = require('bcryptjs');
 const { protectAdmin } = require("../middleware/usermiddleware")
@@ -43,6 +45,23 @@ router.get("/get_all_users", protectAdmin, async (req, res)=>{
 
         var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation from Mentor`;
         var [mentors] = await connection.execute(query);
+        for(const mentor of mentors){
+            mentor['acceptedApplications']=0;
+            mentor['rejectedApplications']=0;
+        }
+        var [applications] = await connection.execute(`SELECT * from Applications`);
+        for(const application of applications){
+            for(var mentor of mentors){
+                if(mentor.id===application.firstPreference){
+                    if(application.firstPreferenceStatus==='Accepted') mentor['acceptedApplications']+=1;
+                    else if(application.firstPreferenceStatus==='Rejected') mentor['rejectedApplications']+=1;
+                }
+                if(mentor.id===application.secondPreference){
+                    if(application.secondPreferenceStatus==='Accepted') mentor['acceptedApplications']+=1;
+                    else if(application.secondPreferenceStatus==='Rejected') mentor['rejectedApplications']+=1;
+                }
+            }
+        }
 
         var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation from ADMIN`;
         var [admins] = await connection.execute(query);
@@ -263,5 +282,72 @@ router.post("/add_mentor_csv", adminUpload, async (req, res)=>{
             console.log('Database connection closed');
         }
         return res.status(500).send('Server error');
+    }
+})
+
+router.get("/download_zip", protectAdmin, async(req,res)=>{
+    const connection = await db();
+    try{
+        const csvWriter = createCsvWriter({
+            path: "../uploads/applications.csv",
+            header: [
+              { id: 'Id', title: 'ID' },
+              { id: 'Mentee_Id', title: 'MenteeID' },
+              { id: 'justification', title: 'Justification' },
+              { id: 'researchProblem', title: 'ResearchProblem' },
+              { id : 'coursework', title: 'CourseWork' },
+              { id : 'researchExperience', title : 'ResearchExperience' },
+              { id : 'onlineCourses', title : 'OnlineCourses' },
+              { id : 'firstPreference', title : 'FirstPreference' },
+              { id : 'secondPreference', title : 'SecondPreference' },
+              { id : 'references_text', title : 'References' },
+              { id : 'goals', title : 'Goals' },
+              { id : 'cv', title : 'CV'},
+              { id : 'statementOfPurpose', title : 'StatementOfPurpose' },
+              { id : 'consentLetter', title : 'ConsentLetter' },
+              { id : 'specificActivities', title: 'SpecificActivities'},
+              { id : 'advisorName', title : 'AdvisorName' },
+              { id : 'advisorEmail', title : 'AdvisorEmail' },
+              { id : 'coAdvisorName', title : 'coAdvisorName'},
+              { id : 'coAdvisorEmail', title : 'coAdvisorEmail' },
+              { id : 'firstPreferenceStatus', title : 'firstPreferenceStatus'},
+              { id : 'secondPreferenceStatus', title : 'secondPreferenceStatus'},
+            ]
+        });
+        const [applications] = await connection.execute(`SELECT * from Applications`);
+        await csvWriter.writeRecords(applications);
+        res.setHeader('Content-Type', 'application/zip');
+        res.setHeader('Content-Disposition', 'attachment; filename=folder.zip');
+
+        const archive = archiver('zip', {
+            zlib: { level: 5 } // Sets the compression level (0-9, 9 being the highest compression)
+        });
+
+        archive.on('error', (err) => {
+            res.status(500).send({ error: 'Failed to create zip file.' });
+        });
+
+        archive.on('finish', ()=>{
+            var flag = fs.existsSync("../uploads/applications.csv")
+            if (flag) {
+                fs.unlinkSync("../uploads/applications.csv")
+            }
+        })
+
+        archive.pipe(res);
+        const folderPath = "../uploads/"
+
+        archive.directory(folderPath, false);
+        archive.finalize();
+    }
+    catch(e){
+        console.error('Error during login:', e);
+        return res.status(500).send('Server error');
+    }finally {
+        if (connection) {
+            await connection.end();
+            
+            console.log('Database connection closed');
+        }
     }
 })
