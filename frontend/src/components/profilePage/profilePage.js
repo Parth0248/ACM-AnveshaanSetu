@@ -92,10 +92,6 @@ const ProfilePage = () => {
                     value={profile.firstName}
                     required
                     margin="normal"
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    sx={{ backgroundColor: '#eeeeee' }} // lighter shade of grey
                 />
                 <TextField
                     fullWidth
@@ -105,10 +101,6 @@ const ProfilePage = () => {
                     onChange={handleChange}
                     required
                     margin="normal"
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    sx={{ backgroundColor: '#eeeeee' }} // lighter shade of grey
                 />
                 <TextField
                     fullWidth

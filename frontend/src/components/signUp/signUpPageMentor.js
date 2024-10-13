@@ -6,7 +6,7 @@ import {jwtDecode} from 'jwt-decode';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
-const SignUpPage = () => {
+const SignUpPageMentor = () => {
   const [passwordStrength, setPasswordStrength] = useState("");
   const navigate = useNavigate();
   const [user, setUser] = useState({
@@ -53,7 +53,7 @@ const SignUpPage = () => {
     const token = response.credential;
     const decodedUser = jwtDecode(token);
     try{
-      const res = await axios.post('/auth/users/google_signup', decodedUser,
+      const res = await axios.post('/auth/mentors/google_signup', decodedUser,
       {
           headers: {
               'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ const SignUpPage = () => {
         localStorage.setItem('User', res.data.token);
         localStorage.setItem('type', res.data.type);
         
-        if(type === 'mentee'){
+        if(type === 'mentor'){
             navigate('/');
         }
       }
@@ -90,7 +90,7 @@ const SignUpPage = () => {
       return;
     }
     try {
-      const res = await axios.post('/auth/users/signup', user, {
+      const res = await axios.post('/auth/mentors/signup', user, {
           headers: {
               'Content-Type': 'application/json',
           },
@@ -210,4 +210,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignUpPageMentor;
