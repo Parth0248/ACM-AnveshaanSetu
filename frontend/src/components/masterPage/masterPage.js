@@ -9,7 +9,6 @@ const AllUsersPage = () => {
     const [allMentors, setAllMentors] = useState([]);
     const [allAdmins, setAllAdmins] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResult, setSearchResult] = useState({found: true, message: ''});
 
     const handleDelete = (id, type) => {
         console.log(`Delete ${type} with ID: ${id}`);
@@ -18,8 +17,6 @@ const AllUsersPage = () => {
     };
 
     const navigate = useNavigate();
-    // const isTestData = true; // Set to true to use dummy data
-
     useEffect(() => {
         if (!localStorage.getItem('User')) {
             navigate('/login')
@@ -48,27 +45,6 @@ const AllUsersPage = () => {
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
-    };
-
-    const performSearch = () => {
-        if (!searchQuery) {
-            setSearchResult({ found: true, message: '' });
-            return;
-        }
-        let found = false;
-        // Simple case-insensitive search
-        [allUsers, allMentors, allAdmins].forEach(group => {
-            group.forEach(person => {
-                if (
-                    person.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    person.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    person.affiliation.toLowerCase().includes(searchQuery.toLowerCase())
-                ) {
-                    found = true;
-                }
-            });
-        });
-        setSearchResult({ found: found, message: found ? '' : 'No matches found.' });
     };
 
     const filterUser=()=>{
@@ -107,7 +83,7 @@ const AllUsersPage = () => {
 
     const filterAdmin=()=>{
         if(!searchQuery){
-            return allUsers;
+            return allAdmins;
         }
 
         return allAdmins.filter(person =>{
@@ -122,11 +98,8 @@ const AllUsersPage = () => {
         })
     }
 
-    // ... existing state ...
     const [openModal, setOpenModal] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
-
-    // ... existing functions ...
 
     const handleEdit = (user, type) => {
         setEditingUser({ ...user, type });
@@ -138,10 +111,49 @@ const AllUsersPage = () => {
         setEditingUser(null);
     };
 
-    const handleSaveEdit = () => {
-        // Logic to save the edited user
-        console.log('Saving edited user:', editingUser);
-        // Here you would typically make an API call to update the user
+    const handleSaveEdit = async () => {
+        const token = localStorage.getItem("User");
+        try {
+            const response = await axios.post("/admin/edit_users", editingUser, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if(response.status===200){
+                if(editingUser.type==='Users'){
+                    setAllUsers((prevUsers) => 
+                        prevUsers.map((user) =>
+                            user.id === editingUser.id
+                                ? { ...user, ...editingUser } // update the matching user with new data
+                                : user // leave others unchanged
+                        )
+                    );
+                }
+                else if(editingUser.type==="Mentors"){
+                    setAllMentors((prevUsers) => 
+                        prevUsers.map((user) =>
+                            user.id === editingUser.id
+                                ? { ...user, ...editingUser } // update the matching user with new data
+                                : user // leave others unchanged
+                        )
+                    );
+                }
+                else if(editingUser.type==="Admins"){
+                    setAllAdmins((prevUsers) => 
+                        prevUsers.map((user) =>
+                            user.id === editingUser.id
+                                ? { ...user, ...editingUser } // update the matching user with new data
+                                : user // leave others unchanged
+                        )
+                    );
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            if (error.response.status === 500) {
+                navigate("/serverError");
+            } else if (error.response.status === 401) {
+                navigate("/unauthorized");
+            }
+        }
         handleCloseModal();
     };
 
@@ -150,7 +162,7 @@ const AllUsersPage = () => {
 
         let fields;
         switch (editingUser.type) {
-            case 'users':
+            case 'Users':
                 fields = (
                     <>
                         <TextField fullWidth margin="normal" label="First Name" value={editingUser.firstName} onChange={(e) => setEditingUser({...editingUser, firstName: e.target.value})} />
@@ -161,16 +173,17 @@ const AllUsersPage = () => {
                     </>
                 );
                 break;
-            case 'mentors':
+            case 'Mentors':
                 fields = (
                     <>
                         <TextField fullWidth margin="normal" label="First Name" value={editingUser.firstName} onChange={(e) => setEditingUser({...editingUser, firstName: e.target.value})} />
                         <TextField fullWidth margin="normal" label="Last Name" value={editingUser.lastName} onChange={(e) => setEditingUser({...editingUser, lastName: e.target.value})} />
                         <TextField fullWidth margin="normal" label="Affiliation" value={editingUser.affiliation} onChange={(e) => setEditingUser({...editingUser, affiliation: e.target.value})} />
+                        <TextField fullWidth margin="normal" label="Reasearch Areas" value={editingUser.researchAreas} onChange={(e) => setEditingUser({...editingUser, researchAreas: e.target.value})} />
                     </>
                 );
                 break;
-            case 'admins':
+            case 'Admins':
                 fields = (
                     <>
                         <TextField fullWidth margin="normal" label="First Name" value={editingUser.firstName} onChange={(e) => setEditingUser({...editingUser, firstName: e.target.value})} />
@@ -210,8 +223,6 @@ const AllUsersPage = () => {
                     onChange={handleSearchChange}
                     sx={{ mb: 2 }}
                 />
-                <Button variant="contained" color="primary" onClick={performSearch}>Search</Button>
-                {!searchResult.found && <Typography color="error" sx={{ mt: 1 }}>{searchResult.message}</Typography>}
             </Box>
             <Box>
                 <Typography variant="h5" sx={{ mt: 2 }}>Users</Typography>
@@ -219,7 +230,7 @@ const AllUsersPage = () => {
                     {filterUser().map((user) => (
                         <ListItem key={user.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
                             <>
-                                <Button onClick={() => handleEdit(user, 'users')} color="primary" sx={{ mr: 1 }}>EDIT</Button>
+                                <Button onClick={() => handleEdit(user, 'Users')} color="primary" sx={{ mr: 1 }}>EDIT</Button>
                                 <Button onClick={() => handleDelete(user.id, 'users')} color="error">Delete</Button>
                             </>
                         }>
@@ -232,7 +243,7 @@ const AllUsersPage = () => {
                     {filterMentor().map((mentor) => (
                         <ListItem key={mentor.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
                             <>
-                                <Button onClick={() => handleEdit(mentor, 'mentors')} color="primary" sx={{ mr: 1 }}>EDIT</Button>
+                                <Button onClick={() => handleEdit(mentor, 'Mentors')} color="primary" sx={{ mr: 1 }}>EDIT</Button>
                                 <Button onClick={() => handleDelete(mentor.id, 'mentors')} color="error">Delete</Button>
                             </>
                         }>
@@ -245,7 +256,7 @@ const AllUsersPage = () => {
                     {filterAdmin().map((admin) => (
                         <ListItem key={admin.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
                             <>
-                                <Button onClick={() => handleEdit(admin, 'admins')} color="primary" sx={{ mr: 1 }}>EDIT</Button>
+                                <Button onClick={() => handleEdit(admin, 'Admins')} color="primary" sx={{ mr: 1 }}>EDIT</Button>
                                 <Button onClick={() => handleDelete(admin.id, 'admins')} color="error">Delete</Button>
                             </>
                         }>
