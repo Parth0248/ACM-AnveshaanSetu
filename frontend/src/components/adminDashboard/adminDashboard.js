@@ -56,6 +56,37 @@ const AdminDashboard = () => {
         handleClose();
     }
 
+    const handleDownload = async ()=>{
+        const token = localStorage.getItem("User");
+        try {
+            const response = await axios.get("/admin/download_zip", {
+                headers: { Authorization: `Bearer ${token}` },
+              responseType: 'blob',
+            });
+      
+            const blob = new Blob([response.data], { type: 'application/zip' });
+            const downloadUrl = window.URL.createObjectURL(blob);
+      
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = 'exported-file.zip';
+      
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+        } 
+        catch (error) {
+            console.error('Error exporting the ZIP file:', error);
+            if(error.response.status === 500){
+                navigate("/serverError");
+            }
+            else if(error.response.status === 401){
+                navigate("/unauthorized");
+            }
+        }
+    }
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -75,10 +106,10 @@ const AdminDashboard = () => {
               console.error("Error fetching profile data:", error);
               if(error.response.status === 500){
                 navigate("/serverError");
-            }
-            else if(error.response.status === 401){
+                }
+                else if(error.response.status === 401){
                 navigate("/unauthorized");
-            }
+                }
             }
         }
         loadData();
@@ -86,7 +117,8 @@ const AdminDashboard = () => {
     return (
         <Container>
             <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
-            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>All Applications</Typography>
+            <Typography variant="h4" sx={{ mt: 4, mb: 1 }}>All Applications</Typography>
+            <Button type="submit" variant="contained" color="primary" sx={{ mb: 1 }} onClick={handleDownload}>Export Applications</Button>
             <List>
                 {allApplications.map((application) => (
                     <ListItem key={application.id} button onClick={() => handleOpen(application)} sx={{ boxShadow: 3, borderRadius: 2, mb: 2 , cursor: 'pointer'}}>
@@ -102,6 +134,7 @@ const AdminDashboard = () => {
                 </ListItem>
                 ))}
             </List>
+            
             {selectedApplication && (
                 <Dialog 
                 open={open}

@@ -153,41 +153,117 @@ const MentorDashboard = () => {
       <Typography variant="h6">
         Hi Prof. {profile['firstName']} {profile['lastName']}, you have {allApplications.length} applications
       </Typography>
+      <Box>
+        <Typography variant="h5" sx={{ mt: 2 }}>Accepted</Typography>
+        <List>
+          {allApplications.filter(row=>{
+            return row.status === 'Accepted'
+          }).map((app, index) => (
+            // {allApplications.map((app, index) => (
+            <ListItem
+              key={index}
+              button
+              onClick={() => handleOpen(app)}
+              sx={{
+                borderRadius: 2,
+                boxShadow: 2,
+                transition: "0.3s",
+                "&:hover": {
+                  boxShadow: 4,
+                  transform: "scale(1.02)",
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <ListItemText
+                primary={`${app.firstName} ${app.lastName}`}
+                secondary={`Affiliation: ${app.affiliation}, Year of PhD: ${app.yearOfPhd}`}
+              />
+              {app.status === "Accepted" && (
+                <CheckCircleIcon sx={{ color: "green", ml: 2 }} />
+              )}
+              {app.status === "Rejected" && (
+                <CancelIcon sx={{ color: "red", ml: 2 }} />
+              )}
+              {app.status === "Pending" && (
+                <PendingActionsIcon sx={{ color: "#ffc400", ml: 2 }} />
+              )}
+            </ListItem>
+          ))}
+        </List>
 
-      <List>
-        {allApplications.map((app, index) => (
-          // {allApplications.map((app, index) => (
-          <ListItem
-            key={index}
-            button
-            onClick={() => handleOpen(app)}
-            sx={{
-              borderRadius: 2,
-              boxShadow: 2,
-              transition: "0.3s",
-              "&:hover": {
-                boxShadow: 4,
-                transform: "scale(1.02)",
-                cursor: "pointer",
-              },
-            }}
-          >
-            <ListItemText
-              primary={`${app.firstName} ${app.lastName}`}
-              secondary={`Affiliation: ${app.affiliation}, Year of PhD: ${app.yearOfPhd}`}
-            />
-            {app.status === "Accepted" && (
-              <CheckCircleIcon sx={{ color: "green", ml: 2 }} />
-            )}
-            {app.status === "Rejected" && (
-              <CancelIcon sx={{ color: "red", ml: 2 }} />
-            )}
-            {app.status === "Pending" && (
-              <PendingActionsIcon sx={{ color: "#ffc400", ml: 2 }} />
-            )}
-          </ListItem>
-        ))}
-      </List>
+        <Typography variant="h5" sx={{ mt: 2 }}>Pending</Typography>
+        <List>
+          {allApplications.filter(row=> {return row.status === 'Pending'}).map((app, index) => (
+            // {allApplications.map((app, index) => (
+            <ListItem
+              key={index}
+              button
+              onClick={() => handleOpen(app)}
+              sx={{
+                borderRadius: 2,
+                boxShadow: 2,
+                transition: "0.3s",
+                "&:hover": {
+                  boxShadow: 4,
+                  transform: "scale(1.02)",
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <ListItemText
+                primary={`${app.firstName} ${app.lastName}`}
+                secondary={`Affiliation: ${app.affiliation}, Year of PhD: ${app.yearOfPhd}`}
+              />
+              {app.status === "Accepted" && (
+                <CheckCircleIcon sx={{ color: "green", ml: 2 }} />
+              )}
+              {app.status === "Rejected" && (
+                <CancelIcon sx={{ color: "red", ml: 2 }} />
+              )}
+              {app.status === "Pending" && (
+                <PendingActionsIcon sx={{ color: "#ffc400", ml: 2 }} />
+              )}
+            </ListItem>
+          ))}
+        </List>
+
+        <Typography variant="h5" sx={{ mt: 2 }}>Rejected</Typography>
+        <List>
+          {allApplications.filter(row=>{return row.status === 'Rejected'}).map((app, index) => (
+            // {allApplications.map((app, index) => (
+            <ListItem
+              key={index}
+              button
+              onClick={() => handleOpen(app)}
+              sx={{
+                borderRadius: 2,
+                boxShadow: 2,
+                transition: "0.3s",
+                "&:hover": {
+                  boxShadow: 4,
+                  transform: "scale(1.02)",
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <ListItemText
+                primary={`${app.firstName} ${app.lastName}`}
+                secondary={`Affiliation: ${app.affiliation}, Year of PhD: ${app.yearOfPhd}`}
+              />
+              {app.status === "Accepted" && (
+                <CheckCircleIcon sx={{ color: "green", ml: 2 }} />
+              )}
+              {app.status === "Rejected" && (
+                <CancelIcon sx={{ color: "red", ml: 2 }} />
+              )}
+              {app.status === "Pending" && (
+                <PendingActionsIcon sx={{ color: "#ffc400", ml: 2 }} />
+              )}
+            </ListItem>
+          ))}
+        </List>
+      </Box>
 
       <Dialog
         open={open}

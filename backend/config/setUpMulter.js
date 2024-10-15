@@ -36,6 +36,34 @@ var storageconfig = multer.diskStorage({
     }
 });
 
+var storageConfigAdmin = multer.diskStorage({
+    destination: async (req, file, callback) => {
+        const uploadsDir = "../uploads";
+        token = req.headers.authorization.split(" ")[1]; //extracting token
+        const decoded = jwt.verify(token, jwt_secret);
+        const email = decoded.id
+        const adminFolder = `${uploadsDir}/mentorCSV`;
+
+        // Check if the base 'uploads' folder exists, create if not
+        if (!fs.existsSync(uploadsDir)) {
+            fs.mkdirSync(uploadsDir);
+        }
+
+        // Create folder for each mentee based on their username
+        if (!fs.existsSync(adminFolder)) {
+            fs.mkdirSync(adminFolder);
+        }
+
+        // Store files in the specific mentee's folder
+        callback(null, adminFolder);
+    },
+    filename: (req, file, callback) => {
+        // Set a unique name for each uploaded file
+        const uniqueSuffix = `${Date.now()}-${file.originalname}`;
+        callback(null, `${file.fieldname}-${uniqueSuffix}`);
+    }
+});
+
 // File filter to allow only certain file types
 const docfilter = (req, file, cb) => {
     const allowedTypes = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
@@ -46,10 +74,24 @@ const docfilter = (req, file, cb) => {
     }
 };
 
+const csvFilter = (req, file, cb) => {
+    const allowedTypes = ["text/csv"];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true); // File type is allowed
+    } else {
+      cb(new Error("Invalid file type! Only CSV files are allowed."), false); // File type is not allowed
+    }
+  };
+
 // Set up multer configuration with storage and file filter
 var upload = multer({
     storage: storageconfig,
     fileFilter: docfilter,
+});
+
+var upload_admin = multer({
+    storage: storageConfigAdmin,
+    fileFilter : csvFilter,
 });
 
 // Define upload fields for mentee (resume, sop, consent_letter)
@@ -59,4 +101,8 @@ const menteeUpload = upload.fields([
     { name: "consentLetter" }   // Consent letter field
 ]);
 
-module.exports = {menteeUpload}
+const adminUpload = upload_admin.fields([
+    {name: "csv"}
+]);
+
+module.exports = {menteeUpload, adminUpload}

@@ -4,7 +4,6 @@ import ResponsiveAppBar from '../navbar/navbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import MenuItem from '@mui/material/MenuItem';
-import { alignProperty } from '@mui/material/styles/cssUtils';
 
 const AddNewMentorPage = () => {
     const [mentor, setMentor] = useState({
@@ -16,6 +15,8 @@ const AddNewMentorPage = () => {
         access: ''
     });
     const [csvFile, setCsvFile] = useState(null);
+    const [csvFileSet, setCsvFileSet] = useState(false);
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -24,6 +25,7 @@ const AddNewMentorPage = () => {
 
     const handleFileChange = (event) => {
         setCsvFile(event.target.files[0]);
+        setCsvFileSet(true)
     };
 
     const navigate = useNavigate();
@@ -31,23 +33,33 @@ const AddNewMentorPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const token = localStorage.getItem('User');
-        const formData = new FormData();
-        formData.append('csv', csvFile);
-        formData.append('data', JSON.stringify(mentor));
         try {
-            const response = await axios.post('/admin/add_mentor', formData, { headers: { Authorization: `Bearer ${token}` } });
-            if (response.status === 200) {
-                alert('Mentor Added successfully!');
-                setMentor({
-                    firstName: '',
-                    lastName: '',
-                    affiliation: '',
-                    email: '',
-                    researchAreas: '',
-                    access: ''
-                });
-                setCsvFile(null);
+            var response=null;
+            if(!csvFileSet){
+                response = await axios.post('/admin/add_mentor', mentor, { headers: { Authorization: `Bearer ${token}` } });
+                if(response.status===200){
+                    alert('Mentor Added successfully!');
+                    setMentor({
+                        firstName: '',
+                        lastName: '',
+                        affiliation: '',
+                        email: '',
+                        researchAreas: '',
+                        access: ''
+                    });
+                }
             }
+            else{
+                const formData = new FormData();
+                formData.append('csv', csvFile);
+            
+                response = await axios.post('/admin/add_mentor_csv', formData, { headers: { Authorization: `Bearer ${token}` } });
+                if (response.status === 200) {
+                    alert('Mentor Added successfully!');
+                    setCsvFile(null);
+                    setCsvFileSet(false)
+                }
+            } 
         } catch (error) {
             console.error('Error adding mentor:', error);
             if (error.response.status === 500) {
@@ -67,7 +79,7 @@ const AddNewMentorPage = () => {
     return (
         <Container>
             <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
-            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Add New Mentor</Typography>
+            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Add New Mentor/Admin</Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
                 {/* Existing fields */}
                 <TextField fullWidth label="First Name" name="firstName" value={mentor.firstName} onChange={handleChange} required sx={{ mb: 2 }} />
@@ -84,10 +96,15 @@ const AddNewMentorPage = () => {
                 <Typography variant="body2" sx={{ textAlign: 'right' }}>(Format: firstName, lastName, affiliation, email, researchAreas, access)</Typography>
                 <Box sx={{ mt: 3, mb: 2, display: 'flex', justifyContent: 'space-between' }}>
                     <Button type="submit" variant="contained" color="primary">Submit</Button>
-                    <Button variant="contained" component="label">
-                        Upload CSV
+                    {!csvFileSet && <Button variant="contained" component="label">
+                        Choose CSV
                         <input type="file" hidden accept=".csv" onChange={handleFileChange} />
                     </Button>
+                    }
+                    {csvFileSet && <Button variant="contained" component="label" onClick={handleSubmit}>
+                        Upload CSV
+                    </Button>
+                    }                    
                 </Box>
             </Box>
         </Container>

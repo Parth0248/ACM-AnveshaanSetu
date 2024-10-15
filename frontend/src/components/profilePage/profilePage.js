@@ -70,7 +70,7 @@ const ProfilePage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('User');
         try {
             await axios.post('/mentee/profile', profile, { headers: { Authorization: `Bearer ${token}` } });
             alert('Profile updated successfully!');
@@ -92,10 +92,6 @@ const ProfilePage = () => {
                     value={profile.firstName}
                     required
                     margin="normal"
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    sx={{ backgroundColor: '#eeeeee' }} // lighter shade of grey
                 />
                 <TextField
                     fullWidth
@@ -105,10 +101,6 @@ const ProfilePage = () => {
                     onChange={handleChange}
                     required
                     margin="normal"
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    sx={{ backgroundColor: '#eeeeee' }} // lighter shade of grey
                 />
                 <TextField
                     fullWidth
