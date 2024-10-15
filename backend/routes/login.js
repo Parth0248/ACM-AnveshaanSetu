@@ -41,8 +41,8 @@ router.post("/google_login", async (req,res)=>{
         }
 
         var [results] = await connection.query(
-            'Insert Into users (FirstName, Email) values(?, ?)',
-             [req.body.name, req.body.email]
+            'Insert Into users (FirstName, LastName, Email) values (?, ?, ?)',
+             [req.body.name,"", req.body.email]
         );
 
         return res.status(200).json({
@@ -164,7 +164,7 @@ router.post('/users/google_signup', async (req, res)=>{
         }
 
         const [results] = await connection.query(
-           'Insert Into users (FirstName, LastName, Email) values(?, ?, ?)',
+           'Insert Into users (FirstName, LastName, Email) values (?, ?, ?)',
             [req.body.name, "", req.body.email]
         );
 
