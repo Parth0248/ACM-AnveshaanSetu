@@ -37,13 +37,42 @@ router.get("/profile", protectAdmin, async (req, res) => {
     }
 })
 
+router.post("/edit_users", protectAdmin, async (req, res)=>{
+    const connection = await db();
+    try{
+        const type = req.body.type;
+        if(type==="Users"){
+            var query = `UPDATE users SET FirstName='${req.body.firstName}', LastName='${req.body.lastName}', Affiliation='${req.body.affiliation}', Email='${req.body.email}', PHDYear='${req.body.phdYear}' where Id='${req.body.id}'`;
+            await connection.execute(query)
+        }
+        else if(type==="Mentors"){
+            var query = `UPDATE Mentor SET FirstName='${req.body.firstName}', LastName='${req.body.lastName}', Affiliation='${req.body.affiliation}', ResearchAreas='${req.body.researchAreas}' where Id='${req.body.id}'`;
+            await connection.execute(query)
+        }
+        else if(type==="Admins"){
+            var query = `UPDATE Admin SET FirstName='${req.body.firstName}', LastName='${req.body.lastName}', Affiliation='${req.body.affiliation}' where Id='${req.body.id}'`;
+            await connection.execute(query)
+        }
+        return res.status(200).send("Updated Successfully")
+    }
+    catch(e){
+        console.error('Error during login:', e);
+        res.status(500).send('Server error');
+    }finally {
+        if (connection) {
+            await connection.end();
+            console.log('Database connection closed');
+        }
+    }
+})
+
 router.get("/get_all_users", protectAdmin, async (req, res)=>{
     const connection = await db();
     try{
         var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation, PHDYear as phdYear, Email as email from users`;
         var [users] = await connection.execute(query);
 
-        var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation from Mentor`;
+        var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation, ResearchAreas as researchAreas from Mentor`;
         var [mentors] = await connection.execute(query);
         for(const mentor of mentors){
             mentor['acceptedApplications']=0;
@@ -66,7 +95,8 @@ router.get("/get_all_users", protectAdmin, async (req, res)=>{
         var query = `SELECT Id as id, FirstName as firstName, LastName as lastName, Affiliation as affiliation from ADMIN`;
         var [admins] = await connection.execute(query);
 
-        return res.status(200).json({"user":users,
+        return res.status(200).json({
+            "user":users,
             "mentor":mentors,
             "admin":admins
         });
