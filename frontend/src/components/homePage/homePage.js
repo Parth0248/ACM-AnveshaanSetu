@@ -205,12 +205,87 @@ const FinancialDetailsSection = () => (
 
 // Footer Section
 const FooterSection = () => (
-    <Box sx={{ bgcolor: 'primary.dark', color: 'white', p: 4, mt: 4 }}>
+    <Box sx={{ bgcolor: 'primary.dark', color: 'white', p: 2, mt: 6 }}>
         <Typography variant="body2" align="center">
             © 2024 ACM India. All rights reserved.
         </Typography>
     </Box>
 );
+
+const Team = () => (
+    <Box sx={{ mt: 4, mb: 4, ml: 3 }}>
+        <Typography variant="h4">Team</Typography>
+        <Box sx={{ mt: 2 }}>
+            <Typography>Prof. Ponnurangam Kumaraguru “PK” - IIIT Hyderabad</Typography>
+            <Typography>Prof. Rishabh Kaushal - IGDTUW</Typography>
+            <Typography>Prof. Sougata Sen - BITS Pilani Goa campus</Typography>
+        </Box>
+    </Box>
+);
+
+const FAQ = () => (
+    <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">FAQs</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+            <>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I have not yet attended the PhD Clinic, can I apply for this fellowship?</Typography>
+                <Typography variant="body2">A: Absolutely, you can. We strongly recommend applying to Anveshan Setu Fellowship after attending the Clinic, but it is not mandatory.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: Will there be any written test, interviews, for the selection process?</Typography>
+                <Typography variant="body2">A: No, there may be an interaction session (which could be a PhD Clinic slot too) with the mentor to ensure that you are prepared to make the best use of the visit.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: Is there a necessary condition that I can visit only the faculty that I interacted with in PhD Clinic?</Typography>
+                <Typography variant="body2">A: No, not necessary. You can apply to visit any host faculty mentioned in the application form. Please be aware that this is a matchmaking activity, where host faculty should also be interested in hosting you.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: Will I get a lab space/desk to sit and work in the host institute?</Typography>
+                <Typography variant="body2">A: Depending on the infrastructure facilities of the host institute, you will get some space.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: Will I get a hostel in the institute that I will be visiting?</Typography>
+                <Typography variant="body2">A: Same goes for hostel rooms; be prepared to stay in some hostel type accommodation outside if you don't get a hostel room in the campus.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I just finished my PhD, submitted my thesis, waiting for evaluation/defense, am I eligible for this fellowship?</Typography>
+                <Typography variant="body2">A: Congrats on submitting the thesis, must be very satisfying. Unfortunately, this program is for PhD students who have not yet reached the final stages of thesis defense.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: How much fellowship money will I get?</Typography>
+                <Typography variant="body2">A: INR 20,000 per student per visit. ACM India will credit INR 10,000 when you start the visit and additional INR 10,000 when you complete the visit and satisfy the requirements (report, pics, etc.).</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: When can I visit? Should the visit be planned in summer?</Typography>
+                <Typography variant="body2">A: Visit timing can be planned with the host faculty; both you and the faculty member can decide on the timing for the visit. Visit should happen in the period of April 2024 – March 2025.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: Do I need to have ACM membership to apply for this fellowship?</Typography>
+                <Typography variant="body2">A: No, any PhD student (not restricted to ACM members) can apply for this fellowship.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I received the 2021 Fellowship, but did not visit the mentor because of the pandemic and other reasons. Can I apply again this year?</Typography>
+                <Typography variant="body2">A: If you are still a registered PhD student, you are eligible to apply. We look forward to seeing your application.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I received the 2021 Fellowship and I visited the mentor. Can I apply again this year?</Typography>
+                <Typography variant="body2">A: If you are still a registered PhD student, you are eligible to apply. We look forward to seeing your application.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: Does the fellowship elapse?</Typography>
+                <Typography variant="body2">A: Yes, the visit must be completed during April 2024 – March 2025.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: Can I visit the mentor for more than 4 weeks?</Typography>
+                <Typography variant="body2">A: ACM India expects a mentee visit for a duration of 4 weeks, the mentor and mentee can mutually agree (with consent of the mentee's advisor and parent institution) to extend the duration of the visit. If you need any financial support for extending the visit, please reach out to us at (pk.guru[at]iiit[dot]ac[dot]in) with the request.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I just started my Anveshan Setu visit, how do I get the 10K stipend? What do I need to do?</Typography>
+                <Typography variant="body2">A: Please write an email to abhijatv@india.acm.org and cc the mentor you are visiting & pk.guru@iiit.ac.in. In the email mention the date you started the visit, request the mentor to confirm the start. We will share a link to you where we will take your bank details.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I submitted my bank details after starting my visit through the link that was shared, by when will I get the 10K?</Typography>
+                <Typography variant="body2">A: Thank you for sharing your bank details; you should receive 10K within 2 weeks of submitting the form, if you don’t receive it after 2 weeks, feel free to send a reminder email.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I just completed my visit, how I get the 10K stipend? What do I need to do?</Typography>
+                <Typography variant="body2">A: Please write an email to abhijatv@india.acm.org and cc the mentor you are visiting & pk.guru@iiit.ac.in. In the email mention the date you completed the visit, request the mentor to confirm the completion. We will share a link to you where we will take your bank details.</Typography>
+                
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Q: I submitted my bank details after completing my visit through the link that was shared, by when will I get the 10K?</Typography>
+                <Typography variant="body2">A: Thank you for sharing your bank details; you should receive 10K within 2 weeks of submitting the form, if you don’t receive it after 2 weeks, feel free to send a reminder email.</Typography>
+            </>
+        </AccordionDetails>
+    </Accordion>
+);
+
+
 var pages = ['APPLICATIONS'];
 
 const HomePage = () => {
@@ -275,7 +350,8 @@ const HomePage = () => {
             <ExpectationsSection />
             <TimelineSection />
             <FinancialDetailsSection />
-
+            <Team />
+            <FAQ />
             {/* Footer */}
             <FooterSection />
         </Container>
