@@ -36,7 +36,8 @@ const MentorEditProfilePage = () => {
 
     const navigate = useNavigate();
     useEffect(()=>{
-        if(!localStorage.getItem('User')){
+        if(!localStorage.getItem('User') || localStorage.getItem('type')!=='mentor'){
+            localStorage.clear();
             navigate('/login')
         }
         const loadData = async () => {

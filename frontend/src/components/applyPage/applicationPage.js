@@ -52,8 +52,12 @@ const ApplicationPage = () => {
   };
 
   const fetchFacultyOptions = async () => {
+    const token = localStorage.getItem('User'); // assuming token is stored this way
     try {
-      const response = await axios.get("/mentee/get-mentors")
+      const response = await axios.get("/mentee/get-mentors", { headers: { Authorization: `Bearer ${token}` } })
+      if(response.status === 201){
+        navigate("/myApplications")
+      }
       setFacultyOptions(response.data)
     } catch (error) {
         if(error.response.status === 500){
@@ -95,7 +99,8 @@ const ApplicationPage = () => {
   
 
   React.useEffect(()=>{
-      if(!localStorage.getItem('User')){
+      if(!localStorage.getItem('User') || localStorage.getItem('type')!=='mentee'){
+          localStorage.clear();
           navigate('/login')
       }
       fetchFacultyOptions()

@@ -285,12 +285,10 @@ const FAQ = () => (
     </Accordion>
 );
 
-
-var pages = ['APPLICATIONS'];
-
 const HomePage = () => {
     const navigate = useNavigate();
     const [alreadyApplied, setalreadyApplied] = useState(false)
+    const [profileIncomplete, setprofileIncomplete] = useState(false)
     React.useEffect(()=>{
         if(!localStorage.getItem('User')){
             navigate('/login')
@@ -302,7 +300,10 @@ const HomePage = () => {
                   const response = await axios.get("/mentee/check_applied", {
                     headers: { Authorization: `Bearer ${token}` },
                   });
-                  setalreadyApplied(response.data)
+                  if(response.status===200){
+                    setprofileIncomplete(response.data.incomplete);
+                    setalreadyApplied(response.data.applied);
+                  }
                 } catch (error) {
                   console.error("Error fetching profile data:", error);
                   if(error.response.status === 500){
@@ -330,14 +331,19 @@ const HomePage = () => {
                 <Typography variant="h6" sx={{ mb: 2 }}>
                     Bridging the gap between aspiring researchers and established mentors.
                 </Typography>
-                {localStorage.getItem('type') ==='mentee' && !alreadyApplied &&(
+                {localStorage.getItem('type') ==='mentee' && !profileIncomplete && !alreadyApplied &&(
                 <Button component={Link} to="/apply" variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
                     Apply Now
                 </Button>
                 )}
-                {localStorage.getItem('type') ==='mentee' && alreadyApplied &&(
+                {localStorage.getItem('type') ==='mentee' && !profileIncomplete && alreadyApplied &&(
                 <Button component={Link} variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
                     Alread Applied
+                </Button>
+                )}
+                {localStorage.getItem('type') ==='mentee' && profileIncomplete &&(
+                <Button component={Link} variant="contained" size="large" sx={{ bgcolor: 'secondary.main', color: 'white', '&:hover': { bgcolor: 'secondary.dark' } }}>
+                    Please Complete Profile before Applying
                 </Button>
                 )}
             </Box>

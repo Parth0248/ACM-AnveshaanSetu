@@ -19,8 +19,9 @@ const AdminStaticProfilePage = () => {
     };
 
     useEffect(()=>{
-        if(!localStorage.getItem('User')){
-          navigate('/login')
+        if(!localStorage.getItem('User') || localStorage.getItem('type')!=='admin'){
+            localStorage.clear();
+            navigate('/login')
         }
         const loadData = async ()=>{
           const token = localStorage.getItem('User'); // assuming token is stored this way
