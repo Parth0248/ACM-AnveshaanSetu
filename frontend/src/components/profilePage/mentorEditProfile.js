@@ -9,7 +9,9 @@ const MentorEditProfilePage = () => {
     const [profile, setProfile] = useState({
         affiliation: '',
         areasOfExpertise: '',
-        mobileNumber: ''
+        mobileNumber: '',
+        googleScholar: '',
+        personalWebsite: ''
     });
 
     const handleChange = (event) => {
@@ -36,7 +38,8 @@ const MentorEditProfilePage = () => {
 
     const navigate = useNavigate();
     useEffect(()=>{
-        if(!localStorage.getItem('User')){
+        if(!localStorage.getItem('User') || localStorage.getItem('type')!=='mentor'){
+            localStorage.clear();
             navigate('/login')
         }
         const loadData = async () => {
@@ -95,6 +98,24 @@ const MentorEditProfilePage = () => {
                             value={profile.mobileNumber}
                             onChange={handleChange}
                             required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Google Scholar"
+                            name="googleScholar"
+                            value={profile.googleScholar}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Personal Website"
+                            name="personalWebsite"
+                            value={profile.personalWebsite}
+                            onChange={handleChange}
                         />
                     </Grid>
                     <Grid item xs={12}>

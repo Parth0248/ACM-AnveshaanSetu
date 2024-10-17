@@ -17,6 +17,8 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import axios from "axios";
 import ResponsiveAppBar from "../navbar/navbar";
+import LanguageIcon from '@mui/icons-material/Language';
+import GoogleScholar from '../../logos/GoogleScholar.png';
 
 const ApplicationPage = () => {
   const [formData, setFormData] = useState({
@@ -52,8 +54,12 @@ const ApplicationPage = () => {
   };
 
   const fetchFacultyOptions = async () => {
+    const token = localStorage.getItem('User'); // assuming token is stored this way
     try {
-      const response = await axios.get("/mentee/get-mentors")
+      const response = await axios.get("/mentee/get-mentors", { headers: { Authorization: `Bearer ${token}` } })
+      if(response.status === 201){
+        navigate("/myApplications")
+      }
       setFacultyOptions(response.data)
     } catch (error) {
         if(error.response.status === 500){
@@ -92,10 +98,9 @@ const ApplicationPage = () => {
     }
   };
 
-  
-
   React.useEffect(()=>{
-      if(!localStorage.getItem('User')){
+      if(!localStorage.getItem('User') || localStorage.getItem('type')!=='mentee'){
+          localStorage.clear();
           navigate('/login')
       }
       fetchFacultyOptions()
@@ -193,8 +198,18 @@ const ApplicationPage = () => {
                 onChange={handleChange}
               >
                 {facultyOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                  <MenuItem key={option.value} value={option.value} style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{ flexGrow: 1 }}>{option.label}</span>
+                    {option.googleScholar && (
+                      <a href={option.googleScholar} target="_blank" rel="noopener noreferrer" style={{ cursor: 'pointer', marginLeft: '8px' }}>
+                        <img src={GoogleScholar} alt="Google Scholar" style={{ paddingLeft: '10px' , width: '20px', height: '20px', verticalAlign: 'middle' }} />
+                      </a>
+                    )}
+                    {option.personalWebsite && (
+                      <a href={option.personalWebsite} target="_blank" rel="noopener noreferrer" style={{ cursor: 'pointer', marginLeft: '8px' }}>
+                        <LanguageIcon style={{ paddingLeft: '10px', verticalAlign: 'middle' }} />
+                      </a>
+                    )}
                   </MenuItem>
                 ))}
               </Select>
@@ -210,8 +225,18 @@ const ApplicationPage = () => {
                 onChange={handleChange}
               >
                 {facultyOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                  <MenuItem key={option.value} value={option.value} style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{ flexGrow: 1 }}>{option.label}</span>
+                    {option.googleScholar && (
+                      <a href={option.googleScholar} target="_blank" rel="noopener noreferrer" style={{ cursor: 'pointer', marginLeft: '8px' }}>
+                        <img src={GoogleScholar} alt="Google Scholar" style={{ paddingLeft: '10px', width: '20px', height: '20px', verticalAlign: 'middle' }} />
+                      </a>
+                    )}
+                    {option.personalWebsite && (
+                      <a href={option.personalWebsite} target="_blank" rel="noopener noreferrer" style={{ cursor: 'pointer', marginLeft: '8px' }}>
+                        <LanguageIcon style={{ paddingLeft: '10px', verticalAlign: 'middle' }} />
+                      </a>
+                    )}
                   </MenuItem>
                 ))}
               </Select>

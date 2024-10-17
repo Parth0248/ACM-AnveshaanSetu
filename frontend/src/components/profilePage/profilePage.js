@@ -14,14 +14,21 @@ const ProfilePage = () => {
         gender: '',
         phdRegistration: '',
         yearOfPhd: '',
-        acmMailingList: false
+        acmMailingList: false,
+        degree:'',
+        DOB:'',
+        Insta:'',
+        Facebook:'',
+        Twitter:'',
+        Linkedin:''
     });
     const [genderOther, setGenderOther] = useState('');
     const [phdOther, setPhdOther] = useState('');
     const navigate = useNavigate();
     useEffect(() => {
         
-        if(!localStorage.getItem('User')){
+        if(!localStorage.getItem('User') || localStorage.getItem('type')!=='mentee'){
+            localStorage.clear();
             navigate('/login')
         }
         // Placeholder for loading existing user data if available
@@ -31,15 +38,21 @@ const ProfilePage = () => {
                 const response = await axios.get('/mentee/profile', { headers: { Authorization: `Bearer ${token}` } });
                 var user = response.data;
                 setProfile({
-                    'firstName' : user['FirstName'],
-                    'lastName' : user['LastName'],
-                    'email' : user['Email'],
-                    'affiliation' : user['Affiliation'],
-                    'mobileNumber' : user['MobileNumber'],
-                    'gender' : user['Gender'],
-                    'phdRegistration' : user['PHDRegistration'],
-                    'yearOfPhd' : user['PHDYear'],
-                    'acmMailingList' : user['AddToMailingList']
+                    'firstName' : user['FirstName'] || "",
+                    'lastName' : user['LastName'] || "",
+                    'email' : user['Email'] || "",
+                    'affiliation' : user['Affiliation'] === 'null' ?  "" : user['Affiliation'],
+                    'mobileNumber' : user['MobileNumber'] === 'null' ? "" : user['mobileNumber'],
+                    'gender' : user['Gender'] === 'null' ? "" : user['Gender'],
+                    'phdRegistration' : user['PHDRegistration'] === 'null' ? "" : user['PHDRegistration'],
+                    'yearOfPhd' : user['PHDYear'] === 'null' ? "" : user['PHDYear'],
+                    'acmMailingList' : user['AddToMailingList'] === 'true'? true : false,
+                    'degree' : user['Degree'] || "",
+                    'DOB' : user['DOB'] || "",
+                    'Insta' : user['Insta'] || "",
+                    'Facebook' : user['Facebook'] || "",
+                    'Twitter' : user['Twitter'] || "",
+                    'Linkedin' : user['Linkedin'] || ""
                 });
             } catch (error) {
                 if(error.response.status === 500){
@@ -131,6 +144,60 @@ const ProfilePage = () => {
                     label="Mobile Number"
                     name="mobileNumber"
                     value={profile.mobileNumber}
+                    onChange={handleChange}
+                    required
+                    margin="normal"
+                />
+                <TextField
+                    fullWidth
+                    label="DOB(YYYY-MM-DD)"
+                    name="DOB"
+                    value={profile.DOB}
+                    onChange={handleChange}
+                    required
+                    margin="normal"
+                />
+                <TextField
+                    fullWidth
+                    label="Degree"
+                    name="degree"
+                    value={profile.degree}
+                    onChange={handleChange}
+                    required
+                    margin="normal"
+                />
+                <TextField
+                    fullWidth
+                    label="Instagram Account"
+                    name="Insta"
+                    value={profile.Insta}
+                    onChange={handleChange}
+                    required
+                    margin="normal"
+                />
+                <TextField
+                    fullWidth
+                    label="Facebook Account"
+                    name="Facebook"
+                    value={profile.Facebook}
+                    onChange={handleChange}
+                    required
+                    margin="normal"
+                />
+                <TextField
+                    fullWidth
+                    label="Twitter Account"
+                    name="Twitter"
+                    value={profile.Twitter}
+                    onChange={handleChange}
+                    required
+                    margin="normal"
+                />
+                <TextField
+                    fullWidth
+                    label="Linkedin Account"
+                    name="Linkedin"
+                    value={profile.Linkedin}
                     onChange={handleChange}
                     required
                     margin="normal"

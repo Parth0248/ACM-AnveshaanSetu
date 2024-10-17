@@ -71,7 +71,8 @@ const AddNewMentorPage = () => {
     };
 
     useEffect(() => {
-        if (!localStorage.getItem('User')) {
+        if (!localStorage.getItem('User') || localStorage.getItem('type')!=='admin') {
+            localStorage.clear();
             navigate('/login');
         }
     }, []);

@@ -11,7 +11,7 @@ router.get("/profile", protectMentee, async (req, res) => {
     const connection = await db();
     try{
         const id =req.user;
-        var query = `SELECT FirstName, LastName, Email, Affiliation, MobileNumber, Gender, PHDRegistration, PHDYear, AddToMailingList from users where Id="${id}"`;
+        var query = `SELECT FirstName, LastName, Email, Affiliation, MobileNumber, Gender, PHDRegistration, PHDYear, AddToMailingList, Degree, Insta, DOB, Linkedin, Facebook, Twitter from users where Id="${id}"`;
         var [results, fields] = await connection.execute(query);
         if(results?.length>0){
             return res.status(200).json(results[0]);
@@ -28,19 +28,13 @@ router.get("/profile", protectMentee, async (req, res) => {
     }
 })
 
-router.get("/check_applied", protectMentee, async(req,res)=>{
+router.post("/profile", protectMentee, async (req, res) => {
     const connection = await db();
     try{
-        const query = `SELECT COUNT(*) as count from Applications where Mentee_Id='${req.user}'`
+        console.log(req.body)
+        const query = `UPDATE users SET FirstName='${req.body['firstName']}', LastName='${req.body['lastName']}', Email='${req.body['email']}', Affiliation='${req.body['affiliation']}', MobileNumber='${req.body['mobileNumber']}', Gender='${req.body['gender']}', PHDRegistration='${req.body['phdRegistration']}', PHDYear='${req.body['yearOfPhd']}', AddToMailingList='${req.body['acmMailingList']}', DOB='${req.body['DOB']}', Degree='${req.body['degree']}', Insta='${req.body['Insta']}', Facebook='${req.body['Facebook']}', Twitter='${req.body['Twitter']}', Linkedin='${req.body['Linkedin']}' where Id='${req.user}'`;
         const [results] = await connection.execute(query)
-        if(results?.length>0){
-            if(results[0]['count']>0){
-                return res.status(200).send(true);
-            }
-            else{
-                return res.status(200).send(false);
-            }
-        }
+        return res.status(200).send('Profile Updated');
     }
     catch(e){
         console.error('Error during login:', e);
@@ -53,12 +47,29 @@ router.get("/check_applied", protectMentee, async(req,res)=>{
     }
 })
 
-router.post("/profile", protectMentee, async (req, res) => {
+router.get("/check_applied", protectMentee, async(req,res)=>{
     const connection = await db();
     try{
-        const query = `UPDATE users SET FirstName='${req.body['firstName']}', LastName='${req.body['lastName']}', Email='${req.body['email']}', Affiliation='${req.body['affiliation']}', MobileNumber='${req.body['mobileNumber']}', Gender='${req.body['gender']}', PHDRegistration='${req.body['phdRegistration']}', PHDYear='${req.body['yearOfPhd']}', AddToMailingList='${req.body['acmMailingList']}' where Id='${req.user}'`;
+        var [user] = await connection.execute(`SELECT * from users where Id='${req.user}'`);
+        var incomplete = false;
+        if(user?.length>0){
+            for(let key in user[0]){
+                if(key==='Password') continue;
+                if(user[0][key]===null || user[0][key]==='null'){
+                    incomplete = true;
+                }
+            }
+        }
+        const query = `SELECT COUNT(*) as count from Applications where Mentee_Id='${req.user}'`
         const [results] = await connection.execute(query)
-        return res.status(200).send('Profile Updated');
+        if(results?.length>0){
+            if(results[0]['count']>0){
+                return res.status(200).send({'applied':true, 'incomplete':incomplete});
+            }
+            else{
+                return res.status(200).send({'applied':false, 'incomplete':incomplete});
+            }
+        }
     }
     catch(e){
         console.error('Error during login:', e);
@@ -92,9 +103,13 @@ router.use("/submit-application", menteeUpload, async (req, res) => {
     }
 })
 
-router.get("/get-mentors", async (req, res)=>{
+router.get("/get-mentors", protectMentee, async (req, res)=>{
     const connection = await db();
     try{
+        var [applied] = await connection.execute(`SELECT COUNT(*) as count from Applications where Mentee_Id='${req.user}'`)
+        if(applied[0]['count']>0){
+            return res.status(201).send("already applied")
+        }
         var query = "Select * from Mentor where EnrollmentStatus='CURRENT'"
         var [results, fields] = await connection.execute(query)
         var final_output  = []

@@ -114,7 +114,8 @@ const MentorDashboard = () => {
   // maintain a list of 10 mui colour from their palette and assign them to the AppBar and Card components
   const navigate = useNavigate();
   useEffect(() => {
-    if (!localStorage.getItem("User")) {
+    if (!localStorage.getItem("User") || !localStorage.getItem('type')!=='mentor') {
+      localStorage.clear();
       navigate('/login')
     }
     const loadData = async () => {
