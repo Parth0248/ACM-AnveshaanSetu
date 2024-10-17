@@ -14,7 +14,9 @@ const MentorStaticProfilePage = () => {
         affiliation: '',
         areasOfExpertise: '',
         mobileNumber: '',
-        email: ''
+        email: '',
+        googleScholar: '',
+        personalWebsite: ''
     });
 
     const handleEditClick = () => {
@@ -37,7 +39,9 @@ const MentorStaticProfilePage = () => {
                     'email' : user['Email'],
                     'affiliation' : user['Affiliation'],
                     'mobileNumber' : user['MobileNumber'],
-                    'areasOfExpertise' : user['ResearchAreas']
+                    'areasOfExpertise' : user['ResearchAreas'],
+                    'googleScholar' : user['GoogleScholar'],
+                    'personalWebsite' : user['PersonalWebsite']
                 });
             } catch (error) {
                 if(error.response.status === 500){
@@ -75,12 +79,14 @@ const MentorStaticProfilePage = () => {
                         <Typography variant="body1" sx={{ mb: 2 }}>{profile.email}</Typography>
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Affiliation:</Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>{profile.affiliation}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Google Scholar:</Typography>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Mobile Number:</Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>{profile.mobileNumber}</Typography>
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Areas of Expertise:</Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>{profile.areasOfExpertise}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Personal Website:</Typography>
                     </Grid>
                 </Grid>
             </Paper>
