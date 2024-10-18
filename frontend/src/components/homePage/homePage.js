@@ -316,7 +316,7 @@ const HomePage = () => {
             }
             loadData();
         }
-    })
+    }, [])
     return (
         <Container>
             {/* NavBar */}

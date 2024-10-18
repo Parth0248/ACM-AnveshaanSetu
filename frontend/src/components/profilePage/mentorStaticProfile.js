@@ -33,6 +33,7 @@ const MentorStaticProfilePage = () => {
             try {
                 const response = await axios.get('/mentor/profile', { headers: { Authorization: `Bearer ${token}` } });
                 var user = response.data;
+                console.log(user)
                 setProfile({
                     'firstName' : user['FirstName'],
                     'lastName' : user['LastName'],
@@ -41,7 +42,7 @@ const MentorStaticProfilePage = () => {
                     'mobileNumber' : user['MobileNumber'],
                     'areasOfExpertise' : user['ResearchAreas'],
                     'googleScholar' : user['GoogleScholar'],
-                    'personalWebsite' : user['PersonalWebsite']
+                    'personalWebsite' : user['PersonalPage']
                 });
             } catch (error) {
                 if(error.response.status === 500){
@@ -80,6 +81,7 @@ const MentorStaticProfilePage = () => {
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Affiliation:</Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>{profile.affiliation}</Typography>
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Google Scholar:</Typography>
+                        <Typography variant="body1" sx={{ mb: 2 }}>{profile.googleScholar}</Typography>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Mobile Number:</Typography>
@@ -87,6 +89,7 @@ const MentorStaticProfilePage = () => {
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Areas of Expertise:</Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>{profile.areasOfExpertise}</Typography>
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Personal Website:</Typography>
+                        <Typography variant="body1" sx={{ mb: 2 }}>{profile.personalWebsite}</Typography>
                     </Grid>
                 </Grid>
             </Paper>
