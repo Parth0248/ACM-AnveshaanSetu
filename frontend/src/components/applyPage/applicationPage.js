@@ -204,7 +204,7 @@ const ApplicationPage = () => {
             />
 
             <Typography variant="h7" gutterBottom>
-              Faculty whom you would like to visit (1st preference) *
+              Mentor whom you would like to visit (1st preference) *
             </Typography>
             <FormControl fullWidth required>
               <Select
@@ -231,7 +231,7 @@ const ApplicationPage = () => {
             </FormControl>
 
             <Typography variant="h7" gutterBottom>
-              Faculty whom you would like to visit (2nd preference) *
+              Mentor whom you would like to visit (2nd preference) *
             </Typography>
             <FormControl fullWidth required>
               <Select
