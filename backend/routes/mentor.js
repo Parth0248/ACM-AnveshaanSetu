@@ -11,7 +11,7 @@ router.get("/profile", protectMentor, async (req, res) => {
     const connection = await db();
     try{
         const id =req.user;
-        var query = `SELECT FirstName, LastName, Email, Affiliation, MobileNumber, ResearchAreas from Mentor where Id="${id}"`;
+        var query = `SELECT FirstName, LastName, Email, Affiliation, MobileNumber, ResearchAreas, GoogleScholar, PersonalPage from Mentor where Id="${id}"`;
         var [results, fields] = await connection.execute(query);
         if(results?.length>0){
             return res.status(200).json(results[0]);
@@ -32,7 +32,7 @@ router.get("/edit_profile", protectMentor, async (req, res) => {
     const connection = await db();
     try{
         const id =req.user;
-        var query = `SELECT Affiliation, MobileNumber, ResearchAreas from Mentor where Id="${id}"`;
+        var query = `SELECT Affiliation, MobileNumber, ResearchAreas, GoogleScholar, PersonalPage from Mentor where Id="${id}"`;
         var [results, fields] = await connection.execute(query);
         if(results?.length>0){
             return res.status(200).json(results[0]);
@@ -52,7 +52,7 @@ router.get("/edit_profile", protectMentor, async (req, res) => {
 router.post("/edit_profile", protectMentor, async (req, res) => {
     const connection = await db();
     try{
-        const query = `UPDATE Mentor SET Affiliation='${req.body['affiliation']}', ResearchAreas='${req.body['areasOfExpertise']}', MobileNumber='${req.body['mobileNumber']}' where Id='${req.user}'`;
+        const query = `UPDATE Mentor SET Affiliation='${req.body['affiliation']}', ResearchAreas='${req.body['areasOfExpertise']}', MobileNumber='${req.body['mobileNumber']}', GoogleScholar='${req.body['googleScholar']}', PersonalPage='${req.body['personalWebsite']}' where Id='${req.user}'`;
         const [results] = await connection.execute(query)
         return res.status(200).send('Profile Updated');
     }

@@ -51,6 +51,7 @@ const ApplicationPage = () => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
+    console.log(formData)
   };
 
   const fetchFacultyOptions = async () => {
@@ -105,6 +106,20 @@ const ApplicationPage = () => {
       }
       fetchFacultyOptions()
   },[])
+
+  const filterFirstPref = ()=>{
+    if(formData['secondPreference'] === "") return facultyOptions;
+    return facultyOptions.filter(ele=>{
+      return ele['value']!==formData['secondPreference']
+    })
+  }
+
+  const filterSecondPref = ()=>{
+    if(formData['firstPreference'] === "") return facultyOptions;
+    return facultyOptions.filter(ele=>{
+      return ele['value']!==formData['firstPreference']
+    })
+  }
 
   return (
     <Container>
@@ -197,7 +212,7 @@ const ApplicationPage = () => {
                 value={formData.firstPreference}
                 onChange={handleChange}
               >
-                {facultyOptions.map((option) => (
+                {filterFirstPref().map((option) => (
                   <MenuItem key={option.value} value={option.value} style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{ flexGrow: 1 }}>{option.label}</span>
                     {option.googleScholar && (
@@ -224,7 +239,7 @@ const ApplicationPage = () => {
                 value={formData.secondPreference}
                 onChange={handleChange}
               >
-                {facultyOptions.map((option) => (
+                {filterSecondPref().map((option) => (
                   <MenuItem key={option.value} value={option.value} style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{ flexGrow: 1 }}>{option.label}</span>
                     {option.googleScholar && (

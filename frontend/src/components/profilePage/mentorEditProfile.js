@@ -50,7 +50,9 @@ const MentorEditProfilePage = () => {
                 setProfile({
                     affiliation: user['Affiliation'] || '',
                         areasOfExpertise: user['ResearchAreas'] || '',
-                        mobileNumber: user['MobileNumber'] || ''
+                        mobileNumber: user['MobileNumber'] || '',
+                        googleScholar: user['GoogleScholar'] || '',
+                        personalWebsite : user['PersonalPage'] || ''
                 });
             } catch (error) {
                 if(error.response.status === 500){

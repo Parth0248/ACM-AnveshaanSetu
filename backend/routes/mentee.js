@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 var db = require("../config/setUpDB.js")
 const { protectMentee } = require("../middleware/usermiddleware")
-const {menteeUpload} = require("../config/setUpMulter.js")
+const {menteeUpload} = require("../config/setUpMulter.js");
+const e = require('express');
 router = express.Router()
 module.exports = router;
 
@@ -116,6 +117,7 @@ router.get("/get-mentors", protectMentee, async (req, res)=>{
         results.forEach(ele => {
             final_output.push({
                 label : `${ele['FirstName']} ${ele['LastName']}, ${ele['Affiliation']} - ${ele['ResearchAreas']}`,
+                googleScholar : ele['GoogleScholar'],
                 value: ele['Id']
             })
         });
