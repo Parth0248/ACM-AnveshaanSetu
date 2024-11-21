@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, List, ListItem, ListItemText, Button, Box, TextField, Modal, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, Button, Box, TextField, Stack, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import ResponsiveAppBar from '../navbar/navbar';
 import { useNavigate } from 'react-router';
 import axios from "axios";
@@ -230,10 +230,10 @@ const AllUsersPage = () => {
                 <List>
                     {filterUser().map((user) => (
                         <ListItem key={user.id} sx={{ boxShadow: 1, mb: 2, borderRadius: '4px', backgroundColor: 'background.paper' }} secondaryAction={
-                            <>
+                            <Stack direction="row" spacing={1}>
                                 <Button onClick={() => handleEdit(user, 'Users')} color="primary" sx={{ mr: 1 }}>EDIT</Button>
                                 <Button onClick={() => handleDelete(user.id, 'users')} color="error">Delete</Button>
-                            </>
+                            </Stack>
                         }>
                             <ListItemText primary={`${user.firstName} ${user.lastName}`} secondary={`Affiliation: ${user.affiliation}, PhD Year: ${user.phdYear}, Email Id: ${user.email}`} />
                         </ListItem>

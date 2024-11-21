@@ -66,7 +66,7 @@ const SignUpPageMentor = () => {
         localStorage.setItem('type', res.data.type);
         
         if(type === 'mentor'){
-            navigate('/');
+            navigate('/mentorProfile');
         }
       }
     }
@@ -96,7 +96,7 @@ const SignUpPageMentor = () => {
           },
       });
       if(res.status === 200){
-          navigate('/login');
+          navigate('/mentorProfile');
       }
     } catch (error) {
         if (error.response && error.response.status === 400) {

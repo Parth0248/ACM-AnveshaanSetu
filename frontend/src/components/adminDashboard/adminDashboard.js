@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, List, ListItem, ListItemText, Dialog, AppBar, Toolbar, IconButton, Box } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, Dialog, AppBar, Toolbar, IconButton, Box, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -8,12 +8,28 @@ import ResponsiveAppBar from '../navbar/navbar';
 import Button from '@mui/material/Button';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from "react-router";
+import Modal from '@mui/material/Modal';
 import axios from "axios";
 
 const AdminDashboard = () => {
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [allApplications, setAllApplications] = useState([]);
     const [open, setOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+
+    const Modalstyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
+
+    const handleCloseModal = () => setOpenModal(false);
 
     const handleOpen = (application) => {
         setSelectedApplication(application);
@@ -54,6 +70,19 @@ const AdminDashboard = () => {
             }
         }
         handleClose();
+    }
+
+    const handleResponses = async ()=>{
+        const token = localStorage.getItem("User");
+        try {
+            const response = await axios.post("/admin/send_responses",{}, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setOpenModal(false)
+        }
+        catch (error) {
+            console.error('Error sending responses:', error);
+        }
     }
 
     const handleDownload = async ()=>{
@@ -119,7 +148,51 @@ const AdminDashboard = () => {
         <Container>
             <ResponsiveAppBar pages={['APPLICATIONS', 'ADD MENTOR', 'ALL USERS']} />
             <Typography variant="h4" sx={{ mt: 4, mb: 1 }}>All Applications</Typography>
-            <Button type="submit" variant="contained" color="primary" sx={{ mb: 1 }} onClick={handleDownload}>Export Applications</Button>
+            <Stack direction="row" spacing={2} sx={{ mb: 1}}>
+                <Button 
+                    type="submit" 
+                    variant="contained" 
+                    color="primary"
+                    onClick={handleDownload}
+                >
+                    Export Applications
+                </Button>
+                <Button 
+                    type="submit" 
+                    variant="contained" 
+                    color="primary"
+                    onClick={()=> setOpenModal(true)}
+                >
+                    Send Final Responses
+                </Button>
+                <Modal
+                    open={openModal === true}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={Modalstyle}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h6"
+                        component="h2"
+                      >
+                        Are you sure to send final Responses?
+                      </Typography>
+                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Please click on <strong>send</strong> to send final applications status to students.
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                        <Button onClick={() => handleResponses()} variant="contained">
+                          Send
+                        </Button>
+                        <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Modal>
+            </Stack>
             <List>
                 {allApplications.map((application) => (
                     <ListItem key={application.id} button onClick={() => handleOpen(application)} sx={{ boxShadow: 3, borderRadius: 2, mb: 2 , cursor: 'pointer'}}>

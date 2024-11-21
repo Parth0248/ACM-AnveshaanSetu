@@ -16,6 +16,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
+    setError('')
     const { name, value } = e.target;
     setCredentials(prev => ({ ...prev, [name]: value }));
   };
@@ -27,6 +28,7 @@ const LoginPage = () => {
 
         if(credentials.email === '' || credentials.password === '' || !email_regex.test(credentials.email)){
             setError('Please enter valid email and password');
+            return
         }
         else{
             setError('');
@@ -60,7 +62,10 @@ const LoginPage = () => {
             navigate("/serverError")
         }
         else if(error.response.status === 401){
-            navigate("/unauthorized")
+          setError('Please Sign Up')
+        }
+        else if(error.response.status===400){
+          setError('Enter Correct Credentials')
         }
     }
   }
