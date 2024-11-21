@@ -2,7 +2,6 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 var db = require("../config/setUpDB.js");
-const nodemailer = require("nodemailer");
 const { protectMentor } = require("../middleware/usermiddleware")
 router = express.Router()
 module.exports = router;
@@ -82,12 +81,6 @@ router.use("/acceptApplication", protectMentor, async(req, res)=>{
                 query = `UPDATE Applications SET secondPreferenceStatus='Accepted' where Id=${appId}`
                 await connection.execute(query)
             }
-            query = `SELECT Email from users where Id in (SELECT Mentee_Id from Applications where Id=${appId})`
-            const [email_user] = await connection.execute(query)
-
-            query = `SELECT FirstName, LastName from Mentor where Id=${req.user}`;
-            const [mentor] = await connection.execute(query)
-            sendmail(email_user[0]['Email'], `${mentor[0]['FirstName']} ${mentor[0]['LastName']}`)
             return res.status(200).send("Application Accepted")
         }
     }
@@ -217,30 +210,3 @@ router.get("/applications", protectMentor, async (req, res)=>{
         }
     }
 })
-
-const sendmail = (email, prof) => {
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-
-        auth: {
-            user: 'nipun.tulsian.nt@gmail.com',
-            pass: 'eqyn xhyo ufjp kznd',
-        },
-    });
-
-    var text = `Congratulations on your Application getting accpeted by prof ${prof}`
-    var mailOptions = {
-        from: 'nipun.tulsian.nt@gmail.com',
-        to: email,
-        subject: 'Congratulations for Application Acceptance',
-        text: text,
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-}

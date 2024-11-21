@@ -92,7 +92,7 @@ router.use("/login", async (req, res) => {
                     type: "mentor",
                     token: generateToken(email),
                 });
-            else res.status(400).send("wrongPass")
+            else return res.status(400).send("wrongPass")
         }
 
         [results, fields] = await connection.execute(login_user);
@@ -105,12 +105,12 @@ router.use("/login", async (req, res) => {
                     type: "mentee",
                     token: generateToken(email),
                 });
-            else res.status(400).send("wrongPass")
+            else return res.status(400).send("wrongPass")
         }
         return res.status(401).send("Pls Sign Up")
     } catch(e){
         console.error('Error during login:', e);
-        res.status(500).send('Server error');
+        return res.status(500).send('Server error');
     } finally {
         if (connection) {
             await connection.end();
@@ -124,9 +124,17 @@ router.post('/users/signup', async (req, res)=>{
     const connection = await db()
     try{
         const {email, password, confirmPassowrd, lastName, firstName} = req.body;
-
-        const user_exist = `SELECT count(*) as count from users where Email="${email}"`;
-
+        var user_exist = `SELECT count(*) as count from users where Email="${email}"`;
+        var [results_count, fields] = await connection.execute(user_exist);
+        if(results_count[0].count > 0){
+            return res.status(400).send("Email Already Registered");
+        }
+        user_exist = `SELECT count(*) as count from Mentor where Email="${email}"`;
+        var [results_count, fields] = await connection.execute(user_exist);
+        if(results_count[0].count > 0){
+            return res.status(400).send("Email Already Registered");
+        }
+        user_exist = `SELECT count(*) as count from Admin where Email="${email}"`;
         var [results_count, fields] = await connection.execute(user_exist);
         if(results_count[0].count > 0){
             return res.status(400).send("Email Already Registered");

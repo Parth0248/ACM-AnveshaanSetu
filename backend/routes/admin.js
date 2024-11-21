@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const { protectAdmin } = require("../middleware/usermiddleware")
 const {adminUpload} = require("../config/setUpMulter.js");
 const fs = require('fs');
+const nodemailer = require("nodemailer");
 const fastcsv = require('fast-csv');
 
 router = express.Router()
@@ -381,3 +382,81 @@ router.get("/download_zip", protectAdmin, async(req,res)=>{
         }
     }
 })
+
+router.post("/send_responses", protectAdmin, async (req, res)=>{
+    const connection = await db();
+    try{
+        var query =`
+            SELECT A.firstPreference, A.secondPreference,
+            A.firstPreferenceStatus, A.secondPreferenceStatus,
+            A.Mentee_Id,
+            m1.FirstName AS FirstMentorFirstName, 
+            m1.LastName AS FirstMentorLastName,
+            m1.Email AS FirstMentorEmail,
+            m2.FirstName AS SecondMentorFirstName, 
+            m2.LastName AS SecondMentorLastName,
+            m2.Email AS FirstMentorEmail,
+            u.FirstName AS firstName, 
+            u.LastName AS lastName,
+            u.Email AS email
+            from Applications A
+            INNER JOIN
+            Mentor m1 ON A.firstPreference = m1.Id
+            INNER JOIN
+            Mentor m2 ON A.secondPreference = m2.Id
+            INNER JOIN
+            users u on u.Id = A.Mentee_Id
+        `
+        var [results, fields] = await connection.execute(query)
+        if(results?.length>0){
+            results.forEach(ele=>{
+                if(ele.firstPreferenceStatus==='Accepted'){
+                    sendmail(ele.email, `${ele.firstName} ${ele.lastName}`, `Prof. ${ele.FirstMentorFirstName} ${ele.FirstMentorLastName}` )
+                }
+                else if(ele.secondPreferenceStatus==='Accepted'){
+                    sendmail(ele.email, `${ele.firstName} ${ele.lastName}`, `Prof. ${ele.SecondMentorFirstName} ${ele.SecondMentorLastName}` )
+                }
+            })
+        }
+
+        query= `UPDATE Applications SET statusSent = 1`
+        await connection.execute(query)
+    }
+    catch(e){
+        console.error('Error during login:', e);
+        return res.status(500).send('Server error');
+    }finally {
+        if (connection) {
+            await connection.end();
+            
+            console.log('Database connection closed');
+        }
+    }
+})
+
+const sendmail = (email, student_name, prof) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+
+        auth: {
+            user: 'nipun.tulsian.nt@gmail.com',
+            pass: 'eqyn xhyo ufjp kznd',
+        },
+    });
+
+    var text = `Congratulations ${student_name} your Application is accpeted by prof ${prof}`
+    var mailOptions = {
+        from: 'nipun.tulsian.nt@gmail.com',
+        to: email,
+        subject: 'Congratulations for Application Acceptance',
+        text: text,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}

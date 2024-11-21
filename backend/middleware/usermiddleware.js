@@ -72,6 +72,7 @@ const protectMentor = async (req, res, next) => {
 
 const protectAdmin = async (req, res, next) => {
     let token;
+    console.log(req.headers.authorization)
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) //token is in headers and starts with Bearer token
     {
         const connection = await db()

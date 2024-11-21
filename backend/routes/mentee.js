@@ -142,6 +142,7 @@ router.get("/applications", protectMentee, async(req, res)=>{
                 A.firstPreferenceStatus, 
                 A.secondPreferenceStatus, 
                 A.researchProblem,
+                A.statusSent,
                 m1.FirstName AS FirstMentorFirstName, 
                 m1.LastName AS FirstMentorLastName,
                 m2.FirstName AS SecondMentorFirstName, 
@@ -162,6 +163,10 @@ router.get("/applications", protectMentee, async(req, res)=>{
         var output=[]
         if(results?.length>0){
             results.forEach(ele=>{
+                if(ele.statusSent===0){
+                    ele.firstPreferenceStatus='Pending';
+                    ele.secondPreferenceStatus='Pending'
+                }
                 output.push({
                     id:ele.id,
                     firstName:ele.firstName,
