@@ -53,7 +53,7 @@ Anveshan Setu is a web platform designed to streamline the mentorship process fo
 
     ```bash
     git clone https://github.com/Parth0248/ACM-AnveshaanSetu
-    cd ACM-AnveshanSetu
+    cd ACM-AnveshaanSetu
     ```
 
 2.  **Install Node.js and NPM (if not already installed):**
