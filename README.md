@@ -52,7 +52,7 @@ Anveshan Setu is a web platform designed to streamline the mentorship process fo
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/Parth0248/ACM-AnveshanSetu.git](https://github.com/Parth0248/ACM-AnveshanSetu.git)
+    git clone https://github.com/Parth0248/ACM-AnveshaanSetu
     cd ACM-AnveshanSetu
     ```
 
